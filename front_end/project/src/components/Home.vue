@@ -1,0 +1,111 @@
+<template>
+    <div id="home">
+        <!-- 首页介绍，开始规划按钮 -->
+        <el-row :gutter="20" justify="center">
+            <el-col :span="24" style="background-color:#99a9bf; height:500px;">
+                  <router-link to="/plan"><el-button>开始规划行程</el-button></router-link>
+            </el-col>
+        </el-row>
+        <el-row :gutter="20" justify="center">
+            
+            <div class="block">
+                <p style="line-height:10px; padding-top:20px;">景区热度分布</p>
+                <el-carousel trigger="click" height="600px" interval="5000">
+                    <el-carousel-item v-for="item in 4" :key="item">
+                        <h3>{{ item }}</h3>
+                    </el-carousel-item>
+                </el-carousel>
+            </div>
+        </el-row>
+        <!-- 卡片 -->
+        <el-row>
+            <!-- <el-col :span="6"></el-col> -->
+            <el-col :span="12" :offset="6" justify="center" style="margin-top:30px;">
+                <h2 style="line-height:40px;">为你推荐</h2>
+                <p style="line-height:5px;">（根据用户注册时选择喜爱的景点类型推荐）</p>
+            </el-col>
+        </el-row>
+        <!-- <h1>为你推荐</h1> -->
+        <el-row :gutter="20" id="recommend-card">
+            <el-col :span="3">
+                <i class="el-icon-d-arrow-left"></i>
+            </el-col>
+            <el-col :span="6">
+                <el-card :body-style="cardStyle" shadow="hover">
+                    <img src="../assets/1.png" class="card-img">
+                    <div class="card-content">
+                        <span>万青</span>
+                    </div>
+                </el-card>
+            </el-col>
+            <el-col :span="6">
+                <el-card :body-style="cardStyle" shadow="hover">
+                    <img src="../assets/2.jpeg" class="card-img">
+                    <div class="card-content">
+                        <span>万青</span>
+                    </div>
+                </el-card>
+            </el-col>
+            <el-col :span="6">
+                <el-card :body-style="cardStyle" shadow="hover">
+                    <img src="../assets/3.jpg" class="card-img">
+                    <div class="card-content">
+                        <span>万青</span>
+                    </div>
+                </el-card>
+            </el-col>
+            <el-col :span="3">
+                <i class="el-icon-d-arrow-right"></i>
+            </el-col>
+        </el-row>
+    </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      currentDate: new Date(),
+      cardStyle: {
+        padding: 0
+      }
+    }
+  }
+}
+</script>
+
+<style scoped>
+/* #recommend-card{
+    padding-top: 10px;
+    margin-top: 10px;
+} */
+.demo {
+  background-color: goldenrod;
+}
+
+
+.card-content {
+  padding: 14px;
+}
+.card-img {
+  width: 100%;
+  display: block;
+}
+
+/* 走马灯样式 */
+.el-carousel__item h3 {
+  color: #475669;
+  font-size: 14px;
+  opacity: 0.75;
+  line-height: 150px;
+  margin: 0;
+}
+
+.el-carousel__item:nth-child(2n) {
+  background-color: #99a9bf;
+}
+
+.el-carousel__item:nth-child(2n + 1) {
+  background-color: #d3dce6;
+}
+</style>
