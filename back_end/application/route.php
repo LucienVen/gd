@@ -22,6 +22,9 @@ Route::group('v1',function (){
     Route::resource('user','user/User');
     Route::resource('plan', 'plan/Plan');
     Route::resource('destination', 'destination/Destination');
+    Route::group('destination', function () {
+        Route::resource('/types', 'destination/DestinationTypes');
+    });
     Route::post('design', 'plan/Design');
 });
 
