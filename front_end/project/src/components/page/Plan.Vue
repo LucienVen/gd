@@ -36,21 +36,30 @@
                                 <el-card :body-style="{ padding: '0px' }" shadow="hover">
                                     <img class="img" src="../../assets/city/guangzhou.jpg">
                                     <div style="padding:14px;">
-                                        <span>广州</span>
+                                        <span>成都</span>
                                     </div>
                                 </el-card>
                             </el-col>
                         </el-row>
                         <div>
-                            <el-button @click="nextStep; $store.commit('storeSelectedCity', selectedCity)">下一步</el-button>
+                            <el-button @click="nextStep();$store.commit('storeSelectedCity', selectedCity);">下一步</el-button>
                         </div>
 
                     </el-collapse-item>
                     <el-collapse-item title="选择意愿游玩景点类型（可不选）" name="2">
-                        <div>控制反馈：通过界面样式和交互动效让用户可以清晰的感知自己的操作；</div>
-                        <div>页面反馈：操作后，通过页面元素的变化清晰地展现当前状态。</div>
+                        <p>推荐选项：</p>
+                        <el-checkbox-group v-model="pointTypeList" size="small">
+                            <!-- <span>推荐选项：</span> -->
+                            <el-checkbox v-for="item in recPointType" :label="item.id" :key="item.id" border>{{item.type}}</el-checkbox>
+                            <!-- <el-checkbox v-for="ite in commonPointType" :label="ite.id" :key="ite.id" border>{{ite.type}}</el-checkbox> -->
+                        </el-checkbox-group>
+                        <p>景点类型：</p>
+                        <el-checkbox-group v-model="pointTypeList" size="small">
+                            <el-checkbox v-for="ite in pointType" :label="ite.id" :key="ite.id" border>{{ite.type}}</el-checkbox>
+                        </el-checkbox-group>
+                        <p></p>
                         <div>
-                            <el-button @click="nextStep">下一步</el-button>
+                            <el-button @click="nextStep();$store.commit('storeSelectType',pointTypeList)">下一步</el-button>
                         </div>
                     </el-collapse-item>
                     <el-collapse-item title="游玩选项" name="3">
@@ -85,7 +94,10 @@
                 <div style="background-color:#FFFFFF;">
                     <!-- 判断，是否有数据，否则不显示 -->
                     <div>
-                        {{storeSelectCity}}
+                        <p>{{storeSelectCity}}</p>
+
+                        <p>{{storeSelectPointType}}</p>
+
                     </div>
                 </div>
             </el-col>
@@ -100,7 +112,7 @@ import store from '@/components/store/store.js'
 export default {
   data() {
     return {
-      activeName: '1',
+      activeName: '2',
       cityData: [
         {
           value: 'xiamen',
@@ -115,30 +127,61 @@ export default {
           label: '成都'
         }
       ],
-      selectedCity: ''
+      selectedCity: '',
+
+      pointTypeList: []
     }
   },
   computed: {
-    storeSelectCity() {
-      let name = this.$store.state.selectCityVal;
-      let transDict = this.$store.state.transDict;
-      let res = '';
-      transDict.forEach((item, index) => {
-          if(item.name == name){
-              res = item.transName
-          }
-      });
+    pointType() {
+      return this.$store.state.typeList
+    },
+    recPointType() {
+      return (this.recType = this.$store.getters.storeRecPointType)
+    },
+    commonPointType() {
+      return (this.comType = this.$store.getters.storeCommonPointType)
+    },
 
-      return res;
+    indexPointType() {
+      let index = this.$store.getters.storeCommonPointType
+      index.forEach((element, index) => {
+        console.log(element)
+      })
+    },
+
+    //   获取store中选择的城市名称
+    storeSelectCity() {
+      let name = this.$store.state.selectCityVal
+      let transDict = this.$store.state.transDict
+      let res = ''
+      transDict.forEach((item, index) => {
+        if (item.name == name) {
+          res = item.transName
+        }
+      })
+      return res
+    },
+    // 获取store中选择的景点类别的值
+    storeSelectPointType(){
+        return this.$store.state.selectType;
     }
   },
 
   methods: {
-    
     nextStep() {
       this.activeName = String(parseInt(this.activeName) + 1)
     }
   },
+
+//   created: {
+//     function() {
+//       let index = this.$store.getters.storeCommonPointType
+//       index.forEach((element, index) => {
+//         console.log(element)
+//       })
+//     }
+//   },
   store
 }
 </script>
