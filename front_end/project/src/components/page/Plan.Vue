@@ -63,9 +63,22 @@
                         </div>
                     </el-collapse-item>
                     <el-collapse-item title="游玩选项" name="3">
-                        <div>简化流程：设计简洁直观的操作流程；</div>
-                        <div>清晰明确：语言表达清晰且表意明确，让用户快速理解进而作出决策；</div>
-                        <div>帮助用户识别：界面简单直白，让用户快速识别而非回忆，减少用户记忆负担。</div>
+
+                        <div class="block">
+                            <span class="demonstration">行程选择：</span>
+                            <el-date-picker v-model="schedule" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd">
+                            </el-date-picker>
+                        </div>
+                        <div style="padding-top:20px;">
+                            <span>选择出行方式：</span>
+                            <el-radio-group v-model="travelMode" @change="ticketInformation(travelMode)">
+                                <el-radio :label="3">铁路</el-radio>
+                                <el-radio :label="6">飞机</el-radio>
+                                <el-radio :label="9">自驾车</el-radio>
+                            </el-radio-group>
+                        </div>
+                        <p></p>
+
                         <div>
                             <el-button @click="nextStep">下一步</el-button>
                         </div>
@@ -95,8 +108,9 @@
                     <!-- 判断，是否有数据，否则不显示 -->
                     <div>
                         <p>{{storeSelectCity}}</p>
-
                         <p>{{storeSelectPointType}}</p>
+                        <p>日程：{{schedule}}</p>
+                        <p>出行方式：{{travelMode}}</p>
 
                     </div>
                 </div>
@@ -112,7 +126,7 @@ import store from '@/components/store/store.js'
 export default {
   data() {
     return {
-      activeName: '2',
+      activeName: '3',
       cityData: [
         {
           value: 'xiamen',
@@ -129,7 +143,11 @@ export default {
       ],
       selectedCity: '',
 
-      pointTypeList: []
+      pointTypeList: [],
+
+      // 日程
+      schedule: '',
+      travelMode: ''
     }
   },
   computed: {
@@ -163,25 +181,31 @@ export default {
       return res
     },
     // 获取store中选择的景点类别的值
-    storeSelectPointType(){
-        return this.$store.state.selectType;
+    storeSelectPointType() {
+      return this.$store.state.selectType
     }
   },
 
   methods: {
     nextStep() {
       this.activeName = String(parseInt(this.activeName) + 1)
+    },
+    
+    ticketInformation(mode){
+        alert("出行方式为："+mode);
     }
+
+    
   },
 
-//   created: {
-//     function() {
-//       let index = this.$store.getters.storeCommonPointType
-//       index.forEach((element, index) => {
-//         console.log(element)
-//       })
-//     }
-//   },
+  //   created: {
+  //     function() {
+  //       let index = this.$store.getters.storeCommonPointType
+  //       index.forEach((element, index) => {
+  //         console.log(element)
+  //       })
+  //     }
+  //   },
   store
 }
 </script>
