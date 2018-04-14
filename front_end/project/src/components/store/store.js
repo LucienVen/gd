@@ -48,7 +48,58 @@ const state = {
       value: 70
     }
   ],
-  selectType: []
+  selectType: [],
+
+  // 静态票价
+  ticketMsg: [{
+      'end_time': '08:05',
+      'from_station': '广州东',
+      'is_same_day': '隔日抵达',
+      'seat': {
+        '硬座': '¥130.0',
+        '软卧': '¥340.0',
+        '硬卧': '¥222.0',
+        '无座': '¥130.0'
+      },
+
+      'seat_type': '1413',
+      'start_time': '20:42',
+      'station_no': {
+        'from_s_no': '01',
+        'to_s_no': '16'
+      },
+      'status': '1',
+      'take_time': '11:23',
+      'to_station': '厦门',
+      'train': 'K297',
+      'train_code': '650000K2970D'
+    },
+    {
+      'end_time': '08:05',
+      'from_station': '广州南',
+      'is_same_day': '当天抵达',
+      'seat': {
+        '硬座': '¥130.0',
+        '软卧': '¥340.0',
+        '硬卧': '¥222.0',
+        '无座': '¥130.0'
+      },
+
+
+      'seat_type': '1413',
+      'start_time': '20:42',
+      'station_no': {
+        'from_s_no': '01',
+        'to_s_no': '16'
+      },
+      'status': '1',
+      'take_time': '11:23',
+      'to_station': '厦门',
+      'train': 'K297',
+      'train_code': '650000K2970D'
+    }
+  ]
+
   //   selectPointTypeList: [],
   //   recommendPointTypeList: []
 
@@ -60,34 +111,33 @@ const mutations = {
   storeSelectedCity(state, city) {
     state.selectCityVal = city;
   },
-  storeSelectType(state, typeList){
-      state.selectType = typeList;
+  storeSelectType(state, typeList) {
+    state.selectType = typeList;
   }
 }
 
 
 const getters = {
-    storeRecommendType: function (state) {   
-    },
-    storeRecPointType(state) {
-      let typeList = state.typeList
-      //   定义排序规则
-      let sortValue = (a, b) => b.value - a.value
-      let res = typeList.sort(sortValue)
-      //   数组浅拷贝，取前二
-      let recTypeList = res.slice(0, 2)
-      return recTypeList
-    },
-    // 获取一般景点类别数组
-    storeCommonPointType(states) {
-      let typeList = state.typeList
-      //   定义排序规则
-      let sortValue = (a, b) => b.value - a.value
-      let res = typeList.sort(sortValue)
-      //   数组浅拷贝，取前二
-      let commonTypeList = res.slice(2)
-      return commonTypeList
-    }
+  storeRecommendType: function (state) {},
+  storeRecPointType(state) {
+    let typeList = state.typeList
+    //   定义排序规则
+    let sortValue = (a, b) => b.value - a.value
+    let res = typeList.sort(sortValue)
+    //   数组浅拷贝，取前二
+    let recTypeList = res.slice(0, 2)
+    return recTypeList
+  },
+  // 获取一般景点类别数组
+  storeCommonPointType(states) {
+    let typeList = state.typeList
+    //   定义排序规则
+    let sortValue = (a, b) => b.value - a.value
+    let res = typeList.sort(sortValue)
+    //   数组浅拷贝，取前二
+    let commonTypeList = res.slice(2)
+    return commonTypeList
+  }
 
 
 }

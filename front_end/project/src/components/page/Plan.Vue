@@ -75,7 +75,53 @@
                                 <el-radio :label="3">铁路</el-radio>
                                 <el-radio :label="6">飞机</el-radio>
                                 <el-radio :label="9">自驾车</el-radio>
+                                <el-radio :label="1">未确定</el-radio>
                             </el-radio-group>
+                        </div>
+                        <div style="padding-top:20px;">
+                            <!-- todo: 加上一个判断，若上面并非选择铁路或飞机出行，查询按钮设为禁用 -->
+                            <span>是否需要票务查询：</span>
+                            <el-switch v-model="ticketingInquiry" active-color="#2A97FF" inactive-color="#E8EEF4" >
+                            </el-switch>
+                            <span v-if="ticketingInquiry" style="padding-left:20px;color:#8F9299">请选择您打算选择的出行列车 </span>
+
+                            <!-- TODO: 样式修改 -->
+                            <div v-if="ticketingInquiry" style="padding:20px">
+                                <el-table :data="ticketMsg" style="width: 100%" highlight-current-row @current-change="handleCurrentChange">
+                                    <el-table-column type="expand">
+                                        <template slot-scope="props">
+                                            <el-form label-position="left" inline class="demo-table-expand">
+
+                                                <el-form-item label="抵达站点">
+                                                    <span>{{ props.row.to_station }}</span>
+                                                </el-form-item>
+                                                <el-form-item label="历时">
+                                                    <span>{{ props.row.take_time }}</span>
+
+                                                </el-form-item>
+                                                <el-form-item label="座位信息">
+                                                    <el-tag v-for="(value, key) in props.row.seat">{{key}} - {{value}}</el-tag>
+                                                </el-form-item>
+                                            </el-form>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column label="车次" prop="train">
+                                    </el-table-column>
+                                    <el-table-column label="出发站点" prop="from_station">
+                                    </el-table-column>
+                                    <el-table-column label="出发时间" prop="start_time">
+                                    </el-table-column>
+                                    <el-table-column label="抵达时间" prop="end_time">
+                                    </el-table-column>
+                                    <el-table-column label="描述" prop="is_same_day">
+                                    </el-table-column>
+                                </el-table>
+                                <div style="margin-top: 20px">
+                                    <!-- <el-button @click="setCurrent(tableData[1])">选中第二行</el-button> -->
+                                    <el-button @click="setCurrent()" size="small">取消选择</el-button>
+                                </div>
+                            </div>
+
                         </div>
                         <p></p>
 
@@ -111,6 +157,7 @@
                         <p>{{storeSelectPointType}}</p>
                         <p>日程：{{schedule}}</p>
                         <p>出行方式：{{travelMode}}</p>
+                        <p>选择行数：{{currentRow}}</p>
 
                     </div>
                 </div>
@@ -126,6 +173,8 @@ import store from '@/components/store/store.js'
 export default {
   data() {
     return {
+      // 选择行数
+      currentRow: null,
       activeName: '3',
       cityData: [
         {
@@ -147,10 +196,18 @@ export default {
 
       // 日程
       schedule: '',
-      travelMode: ''
+      //   出行方式
+      travelMode: '',
+      //   票务查询
+      ticketingInquiry: true
     }
   },
   computed: {
+    //   获取票价信息
+    ticketMsg() {
+      return this.$store.state.ticketMsg
+    },
+
     pointType() {
       return this.$store.state.typeList
     },
@@ -161,12 +218,12 @@ export default {
       return (this.comType = this.$store.getters.storeCommonPointType)
     },
 
-    indexPointType() {
-      let index = this.$store.getters.storeCommonPointType
-      index.forEach((element, index) => {
-        console.log(element)
-      })
-    },
+    // indexPointType() {
+    //   let index = this.$store.getters.storeCommonPointType
+    //   index.forEach((element, index) => {
+    //     console.log(element)
+    //   })
+    // },
 
     //   获取store中选择的城市名称
     storeSelectCity() {
@@ -187,15 +244,23 @@ export default {
   },
 
   methods: {
+    //   选择列车行信息
+    handleCurrentChange(val) {
+      this.currentRow = val
+      //   拼接成另一个json结构？
+    },
+    // 取消列车行选择
+    setCurrent(row) {
+    //   this.$refs.singleTable.setCurrentRow(row);
+      return this.currentRow = null
+    },
     nextStep() {
       this.activeName = String(parseInt(this.activeName) + 1)
     },
-    
-    ticketInformation(mode){
-        alert("出行方式为："+mode);
-    }
 
-    
+    // ticketInformation(mode) {
+    //   alert('出行方式为：' + mode)
+    // }
   },
 
   //   created: {
