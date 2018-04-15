@@ -2,17 +2,38 @@
     <div id="home">
         <!-- 首页介绍，开始规划按钮 -->
         <el-row :gutter="20" justify="center">
-            <el-col :span="24" style="background-color:#99a9bf; height:500px;">
-                  <router-link to="/plan"><el-button>开始规划行程</el-button></router-link>
+            <el-col :span="24" style="height:500px;">
+                <echart-demo></echart-demo>
+
+                <!-- <carousel-photo></carousel-photo> -->
+
             </el-col>
         </el-row>
         <el-row :gutter="20" justify="center">
-            
+            <h1>hello world!</h1>
+        </el-row>
+        <el-row :gutter="20" justify="center">
+            <router-link to="/plan">
+                <el-button>开始规划行程</el-button>
+            </router-link>
+        </el-row>
+
+        <el-row :gutter="20" justify="center">
             <div class="block">
                 <p style="line-height:10px; padding-top:20px;">景区热度分布</p>
                 <el-carousel trigger="click" height="600px" interval="5000">
-                    <el-carousel-item v-for="item in 4" :key="item">
-                        <h3>{{ item }}</h3>
+                    <el-carousel-item>
+                        <carousel-photo-1></carousel-photo-1>
+                        <!-- <echart-demo></echart-demo> -->
+                    </el-carousel-item>
+                    <el-carousel-item>
+                        <carousel-photo-2></carousel-photo-2>
+                    </el-carousel-item>
+                    <el-carousel-item>
+                        <carousel-photo-3></carousel-photo-3>
+                    </el-carousel-item>
+                    <el-carousel-item>
+                        <carousel-photo-4></carousel-photo-4>
                     </el-carousel-item>
                 </el-carousel>
             </div>
@@ -62,6 +83,12 @@
 </template>
 
 <script>
+// import EchartDemo from './page/EchartDemo';
+import EchartDemo from './page/Ecdemo'
+import CarouselPhoto1 from './carousel/CarouselPhoto1'
+import CarouselPhoto2 from './carousel/CarouselPhoto2'
+import CarouselPhoto3 from './carousel/CarouselPhoto3'
+import CarouselPhoto4 from './carousel/CarouselPhoto4'
 export default {
   data() {
     return {
@@ -70,6 +97,13 @@ export default {
         padding: 0
       }
     }
+  },
+  components: {
+    'echart-demo': EchartDemo,
+    'carousel-photo-1': CarouselPhoto1,
+    'carousel-photo-2': CarouselPhoto2,
+    'carousel-photo-3': CarouselPhoto3,
+    'carousel-photo-4': CarouselPhoto4
   }
 }
 </script>
@@ -82,7 +116,6 @@ export default {
 .demo {
   background-color: goldenrod;
 }
-
 
 .card-content {
   padding: 14px;

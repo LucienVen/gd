@@ -3,7 +3,10 @@ import Vue from 'vue'
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
+
+// 设置全局变量
 const state = {
+  
   selectCityVal: '',
   transDict: [{
       'name': 'xiamen',
@@ -106,7 +109,7 @@ const state = {
 
 }
 
-
+// 设置同步方法
 const mutations = {
   storeSelectedCity(state, city) {
     state.selectCityVal = city;
@@ -116,7 +119,7 @@ const mutations = {
   }
 }
 
-
+// 设置获取过滤
 const getters = {
   storeRecommendType: function (state) {},
   storeRecPointType(state) {
@@ -142,6 +145,8 @@ const getters = {
 
 }
 
+
+// 导出
 export default new Vuex.Store({
   state,
   mutations,
