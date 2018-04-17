@@ -10,9 +10,6 @@ class Destination extends Base
 {
     public function heatMap(Request $request)
     {
-        // Db::query('select id,location,sale_count from qunar');
-        // $data = Db::table('qunar')->limit(100)->field('id, location, sale_count')->select();
-
         // get all province info
         $province = Db::table('qunar')->field('province')->distinct(true)->select();
 
@@ -24,8 +21,7 @@ class Destination extends Base
         for ($i=0; $i < count($province); $i++) {
             $data[$i] = array_merge($province[$i], $sale_count[$i]);
         }
-        var_dump($data);
 
-
+        return $this->sendSuccess($data);
     }
 }
