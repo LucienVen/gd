@@ -1,7 +1,6 @@
 .idea
 *.log
 runtime/
-public/
 thinkphp/
 vendor
 build.php

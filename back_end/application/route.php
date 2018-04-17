@@ -24,6 +24,7 @@ Route::group('v1',function (){
     Route::resource('destination', 'destination/Destination');
     Route::group('destination', function () {
         Route::resource('/types', 'destination/DestinationTypes');
+        Route::get('/heatmap', 'destination/Destination/heatMap');
     });
     Route::post('design', 'plan/Design');
 });
