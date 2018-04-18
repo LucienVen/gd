@@ -11,11 +11,11 @@ class Destination extends Base
     public function heatMap(Request $request)
     {
         // get all province info
-        $province = Db::table('qunar')->field('name')->distinct(true)->select();
+        $province = Db::table('qunar')->field('province as name')->distinct(true)->select();
 
         // Db::table('qunar')->where('province', $p)->();
         for ($i=0; $i < count($province); $i++) {
-            $sale_count[$i] = Db::query('select sum(sale_count) as value from qunar where province=?', array($province[$i]['province']))[0];
+            $sale_count[$i] = Db::query('select sum(sale_count) as value from qunar where province=?', array($province[$i]['name']))[0];
         }
 
         for ($i=0; $i < count($province); $i++) {
