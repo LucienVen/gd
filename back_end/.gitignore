@@ -7,3 +7,4 @@ build.php
 LIC*
 think
 extend/
+composer.lock
