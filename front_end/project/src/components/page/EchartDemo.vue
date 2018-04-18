@@ -8,6 +8,10 @@
 <script>
 import echarts from 'echarts'
 import { data_point } from '../store/points.js'
+// require('../../assets/js/china')
+// require('../../assets/js/bmap.min.js')
+// import '../../assets/js/china'
+// import '../../assets/js/bmap.min.js'
 // 使用store
 // import homeStore from '@/components/store/homeStore'
 export default {
@@ -19,12 +23,16 @@ export default {
     //require('echarts/lib/chart/bar');
     let chartBox = document.getElementsByClassName('charts')[0]
     let myChart = document.getElementById('myChart')
+
     function resizeCharts() {
       //为调整图标尺寸的方法
       myChart.style.width = chartBox.style.width + 'px'
       myChart.style.height = chartBox.style.height + 'px'
     }
     let mainChart = echarts.init(myChart) // 基于准备好的dom，初始化echarts实例
+    //显示加载动画
+    mainChart.showLoading()
+
     var option = null
     // 存储数据
     var data = []
@@ -77,7 +85,7 @@ export default {
           color: '#fff'
         }
       },
-      
+
       geo: {
         map: 'china',
         label: {
@@ -157,10 +165,13 @@ export default {
           zlevel: 1
         }
       ]
-    };
+    }
+
     // 使用刚指定的配置项和数据显示图表。
     if (option && typeof option === 'object') {
       mainChart.setOption(option, true)
+      //   隐藏加载动画
+      mainChart.hideLoading()
     }
   }
 }

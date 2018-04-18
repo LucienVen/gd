@@ -6,6 +6,21 @@ Vue.use(Vuex);
 
 // 设置全局变量
 const state = {
+  // test
+  heatMap: [],
+  // 选择列车班次
+  selectTrainSchedule: '',
+
+  // 是否票务查询
+  isTicketingInquiry: '',
+  // 选择出行方式
+  travelMode: '',
+  // 出现日程选择
+  schedule: '',
+  // 选择行程舒适度
+  travelComfort: '',
+  //   选择酒店类型
+  hotelType: '',
   
   selectCityVal: '',
   transDict: [{
@@ -116,6 +131,24 @@ const mutations = {
   },
   storeSelectType(state, typeList) {
     state.selectType = typeList;
+  },
+  // 更新现在行程舒适度
+  storeTravelComfort(state, travelComfort){
+    state.travelComfort = travelComfort;
+  },
+  // 更新出现日程
+  storeSchedule(state, schedule){
+    state.schedule = schedule
+  },
+  storeTravelMode(state, travelMode){
+    state.travelMode = travelMode
+  },
+  storeIsTicketingInquiry(state, isTicketingInquiry){
+    state.isTicketingInquiry = isTicketingInquiry
+  },
+  // selectTrainSchedule
+  storeTrainSchedule(state, selectTrainSchedule){
+    state.selectTrainSchedule = selectTrainSchedule
   }
 }
 

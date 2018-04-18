@@ -4,13 +4,17 @@
         <el-row :gutter="20" justify="center">
             <el-col :span="24" style="height:500px;">
                 <echart-demo></echart-demo>
-
+                <!-- <bar-chart></bar-chart> -->
                 <!-- <carousel-photo></carousel-photo> -->
 
             </el-col>
         </el-row>
+        <!-- 暂时放置echarts demo -->
         <el-row :gutter="20" justify="center">
-            <h1>hello world!</h1>
+            <!-- <h1>hello world!</h1> -->
+            <!-- <pie></pie> -->
+            <!-- <bar-chart></bar-chart> -->
+            <map-echarts></map-echarts>
         </el-row>
         <el-row :gutter="20" justify="center">
             <router-link to="/plan">
@@ -84,11 +88,12 @@
 
 <script>
 // import EchartDemo from './page/EchartDemo';
-import EchartDemo from './page/Ecdemo'
+import EchartDemo from './page/EcDemo'
 import CarouselPhoto1 from './carousel/CarouselPhoto1'
 import CarouselPhoto2 from './carousel/CarouselPhoto2'
 import CarouselPhoto3 from './carousel/CarouselPhoto3'
 import CarouselPhoto4 from './carousel/CarouselPhoto4'
+import MapEcharts from './echarts/map'
 export default {
   data() {
     return {
@@ -103,7 +108,8 @@ export default {
     'carousel-photo-1': CarouselPhoto1,
     'carousel-photo-2': CarouselPhoto2,
     'carousel-photo-3': CarouselPhoto3,
-    'carousel-photo-4': CarouselPhoto4
+    'carousel-photo-4': CarouselPhoto4,
+    'map-echarts': MapEcharts
   }
 }
 </script>

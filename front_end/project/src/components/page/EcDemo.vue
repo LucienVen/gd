@@ -1,8 +1,8 @@
 <template>
-    <div id="ec">
-        <!--创建一个echarts的容器-->
-        <div id="echartContainer" style="width:100%; height:500px"></div>
-    </div>
+  <div id="ec">
+    <!--创建一个echarts的容器-->
+    <div id="echartContainer" style="width:100%; height:500px"></div>
+  </div>
 </template>
 
 <script>
@@ -16,6 +16,8 @@ export default {
   mounted() {
     //基于准备好的dom, 初始化echarts实例
     let myChart = echarts.init(document.getElementById('echartContainer'))
+    //显示加载动画
+    myChart.showLoading()
     myChart.setOption({
       xAxis: {
         data: ['衬衫', '羊毛衫', '雪纺衫', '裤子', '高跟鞋', '袜子'],
@@ -78,12 +80,13 @@ export default {
         ]
       }
     })
+
+    myChart.hideLoading() //隐藏加载动画
   }
 }
 </script>
 
 <style scoped>
-#ec{
-   
+#ec {
 }
 </style>

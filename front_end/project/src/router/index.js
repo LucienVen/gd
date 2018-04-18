@@ -6,6 +6,7 @@ import Home from '@/components/Home'
 // import Demo from '@/components/page/Demo'
 
 import Plan from '@/components/page/Plan'
+import ResultTravel from '@/components/page/ResultTravel'
 
 Vue.use(Router)
 
@@ -20,6 +21,11 @@ export default new Router({
       path: '/plan',
       name: 'Plan',
       component: Plan
+    },
+    {
+      path: '/plan/resultTravel',
+      name: 'ResultTravel',
+      component: ResultTravel
     }
   ]
 })

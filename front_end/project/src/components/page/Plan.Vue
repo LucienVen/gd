@@ -66,12 +66,12 @@
 
                         <div class="block">
                             <span class="demonstration">行程选择：</span>
-                            <el-date-picker v-model="schedule" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd">
+                            <el-date-picker v-model="schedule" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" value-format="yyyy-MM-dd" @change="$store.commit('storeSchedule', schedule)">
                             </el-date-picker>
                         </div>
                         <div style="padding-top:20px;">
                             <span>选择出行方式：</span>
-                            <el-radio-group v-model="travelMode" @change="ticketInformation(travelMode)">
+                            <el-radio-group v-model="travelMode" @change="$store.commit('storeTravelMode', travelMode)">
                                 <el-radio :label="3">铁路</el-radio>
                                 <el-radio :label="6">飞机</el-radio>
                                 <el-radio :label="9">自驾车</el-radio>
@@ -81,7 +81,7 @@
                         <div style="padding-top:20px;">
                             <!-- todo: 加上一个判断，若上面并非选择铁路或飞机出行，查询按钮设为禁用 -->
                             <span>是否需要票务查询：</span>
-                            <el-switch v-model="ticketingInquiry" active-color="#2A97FF" inactive-color="#E8EEF4" >
+                            <el-switch v-model="ticketingInquiry" active-color="#2A97FF" inactive-color="#E8EEF4" @change="$store.commit('storeIsTicketingInquiry', ticketingInquiry)">
                             </el-switch>
                             <span v-if="ticketingInquiry" style="padding-left:20px;color:#8F9299">请选择您打算选择的出行列车 </span>
 
@@ -117,8 +117,7 @@
                                     </el-table-column>
                                 </el-table>
                                 <div style="margin-top: 20px">
-                                    <!-- <el-button @click="setCurrent(tableData[1])">选中第二行</el-button> -->
-                                    <el-button @click="setCurrent()" size="small">取消选择</el-button>
+                                    <el-button @click="setCurrent();" size="small">取消选择</el-button>
                                 </div>
                             </div>
 
@@ -126,44 +125,119 @@
                         <p></p>
 
                         <div>
-                            <el-button @click="nextStep">下一步</el-button>
+                            <el-button @click="nextStep();$store.commit('storeTrainSchedule', val);">下一步</el-button>
                         </div>
                     </el-collapse-item>
-                    <el-collapse-item title="住宿选项" name="4">
-                        <div>用户决策：根据场景可给予用户操作建议或安全提示，但不能代替用户进行决策；</div>
-                        <div>结果可控：用户可以自由的进行操作，包括撤销、回退和终止当前操作等。</div>
-                        <div>结果可控：用户可以自由的进行操作，包括撤销、回退和终止当前操作等。</div>
-                        <div>结果可控：用户可以自由的进行操作，包括撤销、回退和终止当前操作等。</div>
-                        <div>结果可控：用户可以自由的进行操作，包括撤销、回退和终止当前操作等。</div>
-                        <div>结果可控：用户可以自由的进行操作，包括撤销、回退和终止当前操作等。</div>
-                        <div>结果可控：用户可以自由的进行操作，包括撤销、回退和终止当前操作等。</div>
-                        <div>结果可控：用户可以自由的进行操作，包括撤销、回退和终止当前操作等。</div>
-                        <div>结果可控：用户可以自由的进行操作，包括撤销、回退和终止当前操作等。</div>
-                        <div>结果可控：用户可以自由的进行操作，包括撤销、回退和终止当前操作等。</div>
-                        <div>结果可控：用户可以自由的进行操作，包括撤销、回退和终止当前操作等。</div>
-                        <div>结果可控：用户可以自由的进行操作，包括撤销、回退和终止当前操作等。</div>
-                        <div>结果可控：用户可以自由的进行操作，包括撤销、回退和终止当前操作等。</div>
-                        <div>
-                            <el-button type="" class="isSubmit">开始规划</el-button>
+                    <el-collapse-item title="旅游偏好" name="4">
+                        <div style="padding:20px;">
+                            <span>行程宽松度：</span>
+                            <el-radio-group v-model="travelComfort" size='medium' @change="$store.commit('storeTravelComfort', travelComfort);">
+                                <el-radio-button :label="3">
+                                    <p>宽松安排</p>
+                                    <p>每天游玩4-6小时</p>
+                                </el-radio-button>
+                                <el-radio-button :label="6">
+                                    <p>适中安排</p>
+                                    <p>每天游玩7-10小时</p>
+                                </el-radio-button>
+                                <el-radio-button :label="9">
+                                    <p>紧凑安排</p>
+                                    <p>每天游玩11-16小时</p>
+                                </el-radio-button>
+                            </el-radio-group>
+
+                        </div>
+                        <div style="padding:20px;">
+                            <span>酒店奢华度：</span>
+                            <el-radio-group v-model="hotelType" size='medium'>
+                                <el-radio-button :label="1">
+                                    <p>经济型</p>
+                                    <p>无星~2星</p>
+                                </el-radio-button>
+                                <el-radio-button :label="2">
+                                    <p>普通型</p>
+                                    <p>3~4星</p>
+                                </el-radio-button>
+                                <el-radio-button :label="3">
+                                    <p>奢华型</p>
+                                    <p>5星</p>
+                                </el-radio-button>
+                                <el-radio-button :label="4">
+                                    <p>客栈/民宿</p>
+                                    <p>-</p>
+                                </el-radio-button>
+                            </el-radio-group>
+                        </div>
+                        <hr/>
+                        <div style="padding-top:20px;">
+                            <router-link to="/plan/resultTravel">
+                                <el-button type="" class="isSubmit">开始规划</el-button>
+                            </router-link>
+
                         </div>
                     </el-collapse-item>
                 </el-collapse>
             </el-col>
             <el-col :span="10">
-                <div style="background-color:#FFFFFF;">
+                <div style="background-color:#FFFFFF; padding:20px">
                     <!-- 判断，是否有数据，否则不显示 -->
-                    <div>
-                        <p>{{storeSelectCity}}</p>
-                        <p>{{storeSelectPointType}}</p>
-                        <p>日程：{{schedule}}</p>
-                        <p>出行方式：{{travelMode}}</p>
-                        <p>选择行数：{{currentRow}}</p>
+                    <!-- 列表展示从store中存储的数据 -->
+                    <el-card class="box-card" style="line-height:20px;text-align:left; padding-top:10px; color:#636363">
+                        <div slot="header" class="clearfix">
+                            <span>从store中获取的值（暗示数据都是从store中获取的）</span>
+                        </div>
 
-                    </div>
+                        <div style="padding-top:12px">
+                            <span>选择目标城市：</span>
+                            {{storeSelectCity}}
+                            <hr/>
+                        </div>
+
+                        <div style="padding-top:12px">
+                            <span>意愿游玩类型：</span>
+                            {{storeSelectPointType}}
+                            <hr/>
+                        </div>
+
+                        <div style="padding-top:12px">
+                            <span>日程选择：</span>
+                            {{storeSelectSchedule}}
+                            <hr/>
+                        </div>
+
+                        <div style="padding-top:12px">
+                            <span>出行方式：</span>
+                            {{storeSelectTravelMode}}
+                            <hr/>
+                        </div>
+
+                        <div style="padding-top:12px">
+                            <span>票务查询：</span>
+                            {{storeIsTicketingInquiry}}
+                            <hr/>
+                        </div>
+
+                        <!-- 当票务查询为true是 -->
+                        <div style="padding-top:12px" v-if="storeIsTicketingInquiry">
+                            <span>选择列车：</span>
+                            {{storeSelectTrainSchedule}}
+                            <hr/>
+                        </div>
+                        <div style="padding-top:12px">
+                            <span>行程宽松度：</span>
+
+                            <hr/>
+                        </div>
+                        <div style="padding-top:12px">
+                            <span>酒店奢华度：</span>
+
+                            <hr/>
+                        </div>
+                    </el-card>
+
                 </div>
             </el-col>
         </el-row>
-
     </div>
 </template>
 
@@ -173,9 +247,14 @@ import store from '@/components/store/store.js'
 export default {
   data() {
     return {
+      // 选择行程舒适度
+      travelComfort: '',
+      //   选择酒店类型
+      hotelType: '',
+
       // 选择行数
       currentRow: null,
-      activeName: '3',
+      activeName: '4',
       cityData: [
         {
           value: 'xiamen',
@@ -218,13 +297,6 @@ export default {
       return (this.comType = this.$store.getters.storeCommonPointType)
     },
 
-    // indexPointType() {
-    //   let index = this.$store.getters.storeCommonPointType
-    //   index.forEach((element, index) => {
-    //     console.log(element)
-    //   })
-    // },
-
     //   获取store中选择的城市名称
     storeSelectCity() {
       let name = this.$store.state.selectCityVal
@@ -240,37 +312,51 @@ export default {
     // 获取store中选择的景点类别的值
     storeSelectPointType() {
       return this.$store.state.selectType
+    },
+    // 获取store中选择的旅行舒适度选项
+    storeSelectTravelComfort() {
+      return this.$store.state.travelComfort
+    },
+    storeSelectSchedule() {
+      return this.$store.state.schedule
+    },
+    storeSelectTravelMode() {
+      return this.$store.state.travelMode
+    },
+    //   store是否票务查询
+    storeIsTicketingInquiry() {
+      return this.$store.state.isTicketingInquiry
+    },
+    // 列车班次选择
+    storeSelectTrainSchedule() {
+      return this.$store.state.selectTrainSchedule
     }
   },
 
   methods: {
+    //   test
+    showType() {
+      alert(this.travelComfort)
+    },
     //   选择列车行信息
+    //   拼接成另一个json结构？
     handleCurrentChange(val) {
-      this.currentRow = val
-      //   拼接成另一个json结构？
+      return (this.currentRow = val)
+      //   return $store.commit('storeTrainSchedule', val)
     },
     // 取消列车行选择
     setCurrent(row) {
-    //   this.$refs.singleTable.setCurrentRow(row);
-      return this.currentRow = null
+      //   this.$refs.singleTable.setCurrentRow(row);
+      return (this.currentRow = null)
     },
     nextStep() {
       this.activeName = String(parseInt(this.activeName) + 1)
-    },
+    }
 
     // ticketInformation(mode) {
     //   alert('出行方式为：' + mode)
     // }
   },
-
-  //   created: {
-  //     function() {
-  //       let index = this.$store.getters.storeCommonPointType
-  //       index.forEach((element, index) => {
-  //         console.log(element)
-  //       })
-  //     }
-  //   },
   store
 }
 </script>
