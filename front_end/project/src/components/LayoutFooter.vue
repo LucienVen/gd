@@ -7,11 +7,12 @@
                         技术选型
                     </div>
                     <p></p>
-                    <div class="item-box-content">
-                        <p>vue</p>
-                        <p>webpack</p>
+                    <div class="item-box-content" v-for="item in ['vue','webpack','npm','ElementUI']">
+                        <p :class="{show:showText,hide:hideText}" @mouseover="overShow" @mouseout="outHide">{{item}}</p>
+                        
+                        <!-- <p>webpack</p>
                         <p>npm</p>
-                        <p>ElementUI</p>
+                        <p>ElementUI</p> -->
                     </div>
                 </div>
             </el-col>
@@ -26,7 +27,7 @@
                         <p>携程网</p>
                         <p>去哪儿网</p>
                         <p>豆瓣</p>
-                        
+
                     </div>
                 </div>
 
@@ -44,13 +45,31 @@
                     </div>
                 </div>
             </el-col>
-            
+
         </el-row>
 
     </div>
 </template>
 
 <script>
+export default {
+  data() {
+    return {
+      showText: false,
+      hideText: true
+    }
+  },
+  methods: {
+    overShow() {
+      this.showText = !this.showText
+      this.hideText = !this.hideText
+    },
+    outHide() {
+      this.showText = !this.showText
+      this.hideText = !this.hideText
+    }
+  }
+}
 </script>
 
 <style scoped>
@@ -58,10 +77,6 @@
   width: 100%;
   font-family: 'Microsoft YaHei';
 }
-
-/* .bg-purple {
-  background: #d3dce6;
-} */
 
 .footer-item-box {
   /* margin-top: 20px; */
@@ -73,13 +88,23 @@
 
 .item-box-title {
   font-size: 18px;
-  
 }
 
 .item-box-content p {
-  margin: 0;
+  margin: 5px 0;
   font-size: 12px;
+  width: 50px;
   /* text-align: left; */
+}
+
+.show {
+    /* 显示下划线 */
+  border-bottom: 1px solid #ffffff;
+}
+
+.hide{
+    /* 隐藏下划线 */
+  border-bottom: 0;  
 }
 </style>
 
