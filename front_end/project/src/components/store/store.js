@@ -3,11 +3,13 @@ import Vue from 'vue'
 import Vuex from 'vuex';
 Vue.use(Vuex);
 
+// import axios from 'axios'
 
 // 设置全局变量
 const state = {
   // test
-  heatMap: [],
+  // heatMapData: [],
+
   // 选择列车班次
   selectTrainSchedule: '',
 
@@ -21,7 +23,7 @@ const state = {
   travelComfort: '',
   //   选择酒店类型
   hotelType: '',
-  
+
   selectCityVal: '',
   transDict: [{
       'name': 'xiamen',
@@ -116,16 +118,29 @@ const state = {
       'train': 'K297',
       'train_code': '650000K2970D'
     }
-  ]
+  ],
 
   //   selectPointTypeList: [],
   //   recommendPointTypeList: []
 
-
+  // 模态框
+  diaTitle: "",
 }
 
 // 设置同步方法
 const mutations = {
+
+  // HeatMap
+  // storeSetHeatMapData(state, heatMapData){
+  //   state.heatMapData = heatMapData
+  // },
+
+  // 更新模态框标题
+  storeSelectDiaTitle(state, diaTitle){
+    state.diaTitle = diaTitle;
+  },
+
+
   storeSelectedCity(state, city) {
     state.selectCityVal = city;
   },
@@ -133,21 +148,21 @@ const mutations = {
     state.selectType = typeList;
   },
   // 更新现在行程舒适度
-  storeTravelComfort(state, travelComfort){
+  storeTravelComfort(state, travelComfort) {
     state.travelComfort = travelComfort;
   },
   // 更新出现日程
-  storeSchedule(state, schedule){
+  storeSchedule(state, schedule) {
     state.schedule = schedule
   },
-  storeTravelMode(state, travelMode){
+  storeTravelMode(state, travelMode) {
     state.travelMode = travelMode
   },
-  storeIsTicketingInquiry(state, isTicketingInquiry){
+  storeIsTicketingInquiry(state, isTicketingInquiry) {
     state.isTicketingInquiry = isTicketingInquiry
   },
   // selectTrainSchedule
-  storeTrainSchedule(state, selectTrainSchedule){
+  storeTrainSchedule(state, selectTrainSchedule) {
     state.selectTrainSchedule = selectTrainSchedule
   }
 }
@@ -174,14 +189,29 @@ const getters = {
     let commonTypeList = res.slice(2)
     return commonTypeList
   }
-
-
 }
 
+// const actions = {
+//   getHeatMapDate({commit}){
+//     axios
+//       .get(
+//         'http://localhost:8089/gd/back_end/public/index.php/v1/destination/heatmap'
+//       )
+//       .then(response => {
+//         console.log(response.data.data);
+        
+//         commit('storeSetHeatMapData', response.data.data)
+//       })
+//       .catch(error => {
+//         console.log(error)
+//       })
+//   }
+// }
 
 // 导出
 export default new Vuex.Store({
   state,
   mutations,
-  getters
+  getters,
+  // actions
 })

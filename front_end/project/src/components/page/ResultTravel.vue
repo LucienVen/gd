@@ -15,7 +15,7 @@
                 <data-dec></data-dec>
             </el-col>
 
-            <!-- 改日行程块 -->
+            <!-- 该日行程块 -->
             <el-col :span="9">
                 <day-travel-detail></day-travel-detail>                
             </el-col>
