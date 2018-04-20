@@ -16,6 +16,11 @@ Route::any('/',function (){
     return redirect('wiki');
 });
 
+// 测试数据
+Route::any('/test', function(){
+    return json_encode(['name' => 123, 'value' => 'Qwer']);
+});
+
 Route::group('v1',function (){
     // Route::any('user/sendCode','demo/User/sendCode');
     Route::post('auth', 'user/Auth/login');
