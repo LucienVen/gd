@@ -1,39 +1,41 @@
 <template>
-    <div id="resultTravel">
-        <!-- <h1>{{msg}}</h1> -->
-        <el-row :gutter="20" id="resTitle">
-            规划结果页
-            <el-button-group>
-                <el-button class="test" icon="el-icon-tickets">标准模式</el-button>
-                <el-button class="test" icon="el-icon-location-outline">地图模式</el-button>
-            </el-button-group>
+  <div id="resultTravel">
+    <!-- <h1>{{msg}}</h1> -->
+    <el-row :gutter="20" id="resTitle" class="resTitle">
+      规划结果页
+      <el-button-group>
+        <el-button class="test" icon="el-icon-tickets">标准模式</el-button>
+        <router-link to="/plan/map">
+          <el-button class="test" icon="el-icon-location-outline">地图模式</el-button>
+        </router-link>
 
-        </el-row>
-        <el-row :gutter="20">
-            <!-- 日期块 -->
-            <el-col :span="6">
-                <data-dec></data-dec>
-            </el-col>
+      </el-button-group>
 
-            <!-- 该日行程块 -->
-            <el-col :span="9">
-                <day-travel-detail></day-travel-detail>                
-            </el-col>
-            <!-- 景点推荐块 -->
-            <el-col :span="9">
-                <el-card :body-style="{ padding: '0px' }" shadow="hover">
-                    <div class="dateList"></div>
-                </el-card>
-            </el-col>
-        </el-row>
+    </el-row>
+    <el-row :gutter="20">
+      <!-- 日期块 -->
+      <el-col :span="6">
+        <data-dec></data-dec>
+      </el-col>
 
-    </div>
+      <!-- 该日行程块 -->
+      <el-col :span="9">
+        <day-travel-detail></day-travel-detail>
+      </el-col>
+      <!-- 景点推荐块 -->
+      <el-col :span="9">
+        <recommend-options></recommend-options>
+      </el-col>
+    </el-row>
+
+  </div>
 </template>
 
 <script>
 // import axios from 'axios'
 import DataDec from './DataDec'
 import DayTravelDetail from './DayTravelDetail'
+import RecommendOptions from './RecommendOptions'
 export default {
   data() {
     return {
@@ -44,13 +46,15 @@ export default {
   created() {},
   components: {
     'data-dec': DataDec,
-    'day-travel-detail': DayTravelDetail
+    'day-travel-detail': DayTravelDetail,
+    'recommend-options': RecommendOptions
   }
 }
 </script>
 
 <style scoped>
 #resultTravel {
+  padding-top: 20px;
   min-height: 500px;
   background-color: #f2f1ed;
 }
