@@ -11,10 +11,6 @@
           规划行程时间: 适中
           <el-progress :percentage="50" color="#7DC28F"></el-progress>
         </div>
-        <!-- <div>{{storeDiaTitle}}</div> -->
-        <!-- <el-button :plain="true" @click="open5">消息</el-button>
-        <el-button :plain="true" @click="open6">close</el-button>
-        <el-button :plain="true" @click="closeNotice">close notice</el-button> -->
       </div>
       <div v-for="(i, index) in test" class="dayItem">
         <a href="javascript:void(0);" class="itemTitle" :class="{mouseOut:isMouseOut[0],mouseOver:isMouseOver[0]}" @mouseover="overOrOutShow(index)" @mouseout="overOrOutShow(index)" :key="i.name" @click="isShow();$store.commit('storeSelectDiaTitle', i.name)">
@@ -112,7 +108,7 @@
 // 引入store
 // import store from '../store/store.js'
 import store from '@/components/store/store.js'
-import ViewPointDialog from './ViewPointDialog'
+// import ViewPointDialog from './ViewPointDialog'
 export default {
   data() {
     return {
@@ -214,9 +210,9 @@ export default {
     //   this.notice.close()
     // }
   },
-  components: {
-    'view-point-dia': ViewPointDialog
-  },
+  // components: {
+  //   'view-point-dia': ViewPointDialog
+  // },
   store
 }
 </script>

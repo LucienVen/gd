@@ -12,6 +12,8 @@ import ECharts from 'vue-echarts/components/ECharts.vue';
 import App from './App'
 import router from './router'
 
+
+
 Vue.config.productionTip = false
 
 Vue.use(ElementUI);

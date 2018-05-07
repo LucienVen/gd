@@ -1,7 +1,7 @@
 <template>
     <div id="home">
         <!-- 首页介绍，开始规划按钮 -->
-        <el-row :gutter="20" justify="center">
+        <el-row :gutter="20" justify="center" v-if="false">
             <el-col :span="24" style="height:500px;">
                 <echart-demo></echart-demo>
                 <!-- <bar-chart></bar-chart> -->
@@ -10,7 +10,7 @@
             </el-col>
         </el-row>
         <!-- 暂时放置echarts demo -->
-        <el-row :gutter="20" justify="center">
+        <el-row :gutter="20" justify="center" >
             <!-- <h1>hello world!</h1> -->
             <!-- <pie></pie> -->
             <!-- <bar-chart></bar-chart> -->

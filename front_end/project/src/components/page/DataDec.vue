@@ -1,45 +1,45 @@
 <template>
-    <div id="dataDec">
-        <!-- <el-col :span="5"> -->
-          
-        <el-card :body-style="{ padding: '0px'}" shadow="hover">
-            <div class="list" v-for="item in storeDataList">
-                <div class="iconDay" @click="test()">
-                    D{{item.day}}
-                </div>
-                <div class="dataSim">
-                    <p>{{item.travelDate}}</p>
-                    <p v-if="item.from_city != null">{{item.from_city}} => {{item.to_city}}</p>
-                    <p v-else>{{item.to_city}}</p>
-                </div>
-            </div>
-            
-
-        </el-card>
-        <!-- <p>
+  <div id="dataDec">
+    <!-- <el-col :span="5"> -->
+    <!-- $store.commit('storeShowDay', travelMode) -->
+    <div v-for="item in storeDataList">
+      <el-card :body-style="{ padding: '0px'}" shadow="hover" @click.native="test();">
+        <div class="list" >
+          <div class="iconDay">
+            D{{item.day}}
+          </div>
+          <div class="dataSim">
+            <p>{{item.travelDate}}</p>
+            <p v-if="item.from_city != null">{{item.from_city}} => {{item.to_city}}</p>
+            <p v-else>{{item.to_city}}</p>
+          </div>
+        </div>
+      </el-card>
+    </div>
+    <!-- <p>
           {{storeDataList}}
         </p> -->
-        <!-- </el-col> -->
-    </div>
+    <!-- </el-col> -->
+  </div>
 </template>
 
 <script>
 import store from '@/components/store/store.js'
 export default {
-  data(){
+  data() {
     return {
-      isShow : true
+      isShow: true
     }
   },
-  computed:{
+  computed: {
     // 从store中获取日期出行列表
-    storeDataList(){
-      return this.$store.state.travelDateList
+    storeDataList() {
+      return this.$store.state.testTravelDate
     }
   },
-  methods:{
-    test(){
-      alert('asdasdsad');
+  methods: {
+    test() {
+      alert('asdasdsad')
     }
   },
   store
@@ -54,15 +54,14 @@ export default {
   overflow: auto;
 }
 
-
 #dataDec::-webkit-scrollbar {
-    /* 整个滚动条 */
+  /* 整个滚动条 */
   width: 4px;
   background: #f2f1ed;
   border-radius: 6px;
 }
 #dataDec::-webkit-scrollbar-thumb {
-    /* 滚动条 */
+  /* 滚动条 */
   background: #c2c2c2;
   border-radius: 6px;
 }
@@ -90,7 +89,7 @@ export default {
   background-color: rgb(213, 218, 213);
   height: 100%;
   padding-top: 30px;
-  
+
   text-align: left;
 }
 

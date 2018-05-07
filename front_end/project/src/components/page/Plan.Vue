@@ -1,12 +1,22 @@
 <template>
     <div id="plan">
         <el-row :gutter="20">
-            <el-col :span="13" :offset="1">
+            <el-col :span="14" :offset="1">
                 <el-collapse v-model="activeName" accordion class="coll">
-                    <el-collapse-item title="选择目标城市" name="1">
+                    <el-collapse-item title="城市选择" name="1">
                         <el-row style="padding-left:40px;" :gutter="20">
+
                             <el-col :span="24">
-                                <span>选择城市: </span>
+                                <div class="block">
+                                    <span class="demonstration">选择出发城市</span>
+                                    <el-cascader v-model="beginCity" placeholder="选择出发城市" :options="options" filterable change-on-select></el-cascader>
+                                </div>
+                            </el-col>
+
+                        </el-row>
+                        <el-row style="padding-left:40px; margin-top:20px;" :gutter="20">
+                            <el-col :span="24">
+                                <span>选择出行城市: </span>
                                 <el-select v-model="selectedCity" filterable placeholder="请选择">
                                     <el-option v-for="item in cityData" :key="item.value" :label="item.label" :value="item.value">
                                     </el-option>
@@ -16,7 +26,7 @@
                         </el-row>
                         <el-row style="padding:30px;" :gutter="20">
                             <el-col :span="8">
-                                <el-card :body-style="{padding:'0px'}" shadow="hover">
+                                <el-card :body-style="{padding:'0px'}" shadow="hover" @click.native='hello()'>
                                     <img class="img" src="../../assets/city/xiamen.jpeg">
                                     <div style="padding:14px;">
                                         <span>厦门</span>
@@ -25,7 +35,7 @@
 
                             </el-col>
                             <el-col :span="8">
-                                <el-card :body-style="{ padding: '0px' }" shadow="hover">
+                                <el-card :body-style="{ padding: '0px' }" shadow="hover" @click.native='hello()'>
                                     <img class="img" src="../../assets/city/guangzhou.jpg">
                                     <div style="padding:14px;">
                                         <span>广州</span>
@@ -33,7 +43,7 @@
                                 </el-card>
                             </el-col>
                             <el-col :span="8">
-                                <el-card :body-style="{ padding: '0px' }" shadow="hover">
+                                <el-card :body-style="{ padding: '0px' }" shadow="hover" @click.native='hello()'>
                                     <img class="img" src="../../assets/city/guangzhou.jpg">
                                     <div style="padding:14px;">
                                         <span>成都</span>
@@ -131,41 +141,22 @@
                     <el-collapse-item title="旅游偏好" name="4">
                         <div style="padding:20px;">
                             <span>行程宽松度：</span>
-                            <el-radio-group v-model="travelComfort" size='medium' @change="$store.commit('storeTravelComfort', travelComfort);">
-                                <el-radio-button :label="3">
-                                    <p>宽松安排</p>
-                                    <p>每天游玩4-6小时</p>
-                                </el-radio-button>
-                                <el-radio-button :label="6">
-                                    <p>适中安排</p>
-                                    <p>每天游玩7-10小时</p>
-                                </el-radio-button>
-                                <el-radio-button :label="9">
-                                    <p>紧凑安排</p>
-                                    <p>每天游玩11-16小时</p>
+                            <el-radio-group v-model="travelComfort" size='medium' v-for="comfort in travelComfortData" @change="$store.commit('storeTravelComfort', travelComfort);">
+                                <el-radio-button :label="comfort.label">
+                                    <p>{{comfort.type}}</p>
+                                    <p>{{comfort.dec}}</p>
                                 </el-radio-button>
                             </el-radio-group>
 
                         </div>
                         <div style="padding:20px;">
                             <span>酒店奢华度：</span>
-                            <el-radio-group v-model="hotelType" size='medium'>
-                                <el-radio-button :label="1">
-                                    <p>经济型</p>
-                                    <p>无星~2星</p>
+                            <el-radio-group v-model="hotelType" size='mini' v-for="hotel in hotelTypeData" @change="$store.commit('storeHotelType', hotel.label)">
+                                <el-radio-button :label="hotel.label">
+                                    <p>{{hotel.type}}</p>
+                                    <p>{{hotel.dec}}</p>
                                 </el-radio-button>
-                                <el-radio-button :label="2">
-                                    <p>普通型</p>
-                                    <p>3~4星</p>
-                                </el-radio-button>
-                                <el-radio-button :label="3">
-                                    <p>奢华型</p>
-                                    <p>5星</p>
-                                </el-radio-button>
-                                <el-radio-button :label="4">
-                                    <p>客栈/民宿</p>
-                                    <p>-</p>
-                                </el-radio-button>
+                                
                             </el-radio-group>
                         </div>
                         <hr/>
@@ -178,13 +169,14 @@
                     </el-collapse-item>
                 </el-collapse>
             </el-col>
-            <el-col :span="10">
+            <el-col :span="8">
                 <div style="background-color:#FFFFFF; padding:20px">
                     <!-- 判断，是否有数据，否则不显示 -->
                     <!-- 列表展示从store中存储的数据 -->
                     <el-card class="box-card" style="line-height:20px;text-align:left; padding-top:10px; color:#636363">
                         <div slot="header" class="clearfix">
-                            <span>从store中获取的值（暗示数据都是从store中获取的）</span>
+                            <span>选项：</span>
+                            <el-button size="mini" style="float:right" @click="$store.commit('reset');">重置</el-button>
                         </div>
 
                         <div style="padding-top:12px">
@@ -225,12 +217,12 @@
                         </div>
                         <div style="padding-top:12px">
                             <span>行程宽松度：</span>
-
+                            {{storeSelectTravelComfort}}
                             <hr/>
                         </div>
                         <div style="padding-top:12px">
                             <span>酒店奢华度：</span>
-
+                            {{storeHotelType}}
                             <hr/>
                         </div>
                     </el-card>
@@ -238,27 +230,30 @@
                 </div>
             </el-col>
         </el-row>
+        <!-- {{options}} -->
     </div>
 </template>
 
 <script>
 // 使用store
 import store from '@/components/store/store.js'
+// 省市json
+import { pca } from '../../../static/js/pcaOption'
 export default {
   data() {
     return {
-      // 选择行程舒适度
-      travelComfort: '',
-      //   选择酒店类型
-      hotelType: '',
-
+      // 省市级联
+      options: pca,
+      // 出发城市
+      beginCity: '',
       // 选择行数
       currentRow: null,
-      activeName: '4',
+      activeName: '1',
       cityData: [
         {
           value: 'xiamen',
-          label: '厦门'
+          label: '厦门',
+          img: ''
         },
         {
           value: 'guangzhou',
@@ -278,7 +273,51 @@ export default {
       //   出行方式
       travelMode: '',
       //   票务查询
-      ticketingInquiry: true
+      ticketingInquiry: false,
+
+      // 选择行程舒适度
+      travelComfort: '',
+      travelComfortData: [
+          {
+              label: 1,
+              type: '宽松安排',
+              dec: '每天游玩4-6小时'
+          },
+          {
+              label: 2,
+              type: '适中安排',
+              dec: '每天游玩7-10小时'
+          },
+          {
+              label: 3,
+              type: '紧凑安排',
+              dec: '每天游玩11-16小时'
+          }
+      ],
+      //   选择酒店类型
+      hotelType: '',
+      hotelTypeData: [
+        {
+          label: 1,
+          type: '经济型',
+          dec: '无星~2星'
+        },
+        {
+          label: 2,
+          type: '普通型',
+          dec: '3~4星'
+        },
+        {
+          label: 3,
+          type: '奢华型',
+          dec: '5星'
+        },
+        {
+          label: 4,
+          type: '客栈/民宿',
+          dec: '-'
+        }
+      ]
     }
   },
   computed: {
@@ -330,10 +369,29 @@ export default {
     // 列车班次选择
     storeSelectTrainSchedule() {
       return this.$store.state.selectTrainSchedule
+    },
+    storeHotelType(){
+        return this.$store.state.hotelType
     }
   },
-
+  
   methods: {
+      resetData(){
+        // 城市
+        this.selectCityVal
+        // 景点
+        // 日程
+        // 出行方式
+        // 票务查询
+        // 宽松度
+        // 奢华度
+      },
+      hello2(type){
+          alert(type)
+      },
+    hello() {
+      alert('Hello, World!')
+    },
     //   test
     showType() {
       alert(this.travelComfort)
