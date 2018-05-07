@@ -33,8 +33,9 @@ class User extends Base
     {
         $user = new UserModel;
 
-        if (($data = $user->where('uid', parent::$app['auth']->token['uid'])->find())) {
-            unset($data['password']);
+        if (($data = $user->where('uid', parent::$app['auth']->token['uid'])
+                        ->field($this->notField,true)
+                        ->find())) {
             return $this->sendSuccess($data);
         }
 
@@ -50,6 +51,7 @@ class User extends Base
     public function save(Request $request)
     {
         $data = $request->post();
+        unset($data['root']);
         $user = new UserModel;
         $validate = validate('User');
 

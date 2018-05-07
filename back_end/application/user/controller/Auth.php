@@ -38,9 +38,11 @@ class Auth extends Base
         }
 
         $user = new User;
-        if ($userData = $user->where(['email'=>$data['email'],'is_delete'=>0,'status'=>0])->find()) {
+        if ($userData = $user->where(['email'=>$data['email'],'is_delete'=>0,'status'=>0])
+                            ->field($this->notField,true)
+                            ->find()) {
             if (password_verify($data['password'], $userData['password'])) {
-                if ($this->getToken($userData['uid'])->setToken()) {
+                if ($this->getToken($userData['uid'])->setToken($request)) {
                     unset($userData['password']);
                     return $this->sendSuccess($userData, 'login success!');
                 }
@@ -70,7 +72,7 @@ class Auth extends Base
     {
         $this->jwt = array('iss' => Config::get('iss'),
                     'aud' => Config::get('aud'),
-                    'exp' => time()+3600*24*7,
+                    'exp' => time()+7*24,
                     'uid' => $uid);
 
         $this->token = JWT::encode($this->jwt, Config::get('jwt_key'));
@@ -83,10 +85,10 @@ class Auth extends Base
      *
      * @return Boolean
      */
-    protected function setToken()
+    protected function setToken(Request $request)
     {
         if (!is_null($this->token)) {
-            Cookie::set('jwt', $this->token, ['expire' => $this->jwt['exp'], 'httponly' => 'httponly']);
+            Cookie::set('jwt', $this->token, ['expire' => $this->jwt['exp'],'httponly' => 'httponly']);
             return true;
         }
         return false;

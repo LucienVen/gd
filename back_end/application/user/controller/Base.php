@@ -15,5 +15,12 @@ class Base extends ApiController
 
     //是否开启授权认证
     public    $apiAuth = true;
+    // 禁止查询返回数据
+    protected $notField=[
+        'create_time',
+        'update_time',
+        'status',
+        'is_delete'
+    ];
 
 }
