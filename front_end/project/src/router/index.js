@@ -7,6 +7,8 @@ import Home from '@/components/Home'
 
 import Plan from '@/components/page/Plan'
 import ResultTravel from '@/components/page/ResultTravel'
+import BaiduMap from '@/components/page/BaiduMap'
+
 
 Vue.use(Router)
 
@@ -26,6 +28,12 @@ export default new Router({
       path: '/plan/resultTravel',
       name: 'ResultTravel',
       component: ResultTravel
+    },
+    {
+      path: '/plan/map',
+      name: 'BaiduMap',
+      component: BaiduMap
     }
+
   ]
 })
