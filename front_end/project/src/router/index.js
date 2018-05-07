@@ -8,6 +8,10 @@ import Home from '@/components/Home'
 import Plan from '@/components/page/Plan'
 import ResultTravel from '@/components/page/ResultTravel'
 import BaiduMap from '@/components/page/BaiduMap'
+import Registered from '@/components/Registered'
+import Login from '@/components/Login'
+import About from '@/components/About'
+
 
 
 Vue.use(Router)
@@ -18,6 +22,21 @@ export default new Router({
       path: '/',
       name: 'Home',
       component: Home
+    },
+    {
+      path: '/login',
+      name: 'Login',
+      component: Login
+    },
+    {
+      path:'/registered',
+      name: 'Registered',
+      component: Registered
+    },
+    {
+      path: '/about',
+      name: 'About',
+      component: About
     },
     {
       path: '/plan',

@@ -7,16 +7,28 @@
 
 <script>
 import echarts from 'echarts'
+// import store from '../store/store.js'
+// import store from '@/components/store/store.js'
+
 import { option } from '../echarts/map-option'
 
 import '../../../static/js/china'
+// import { mapState } from 'vuex'
 import axios from 'axios'
 export default {
   name: '',
   data() {
     return {}
   },
-  created() {},
+
+  computed: {
+    // ...mapState({
+    //   storeHeatMap: state => state.heatMapData
+    // })
+    // storeHeatMap() {
+    //   return this.$store.state.heatMapData
+    // }
+  },
 
   methods: {
     drawChinaMap() {
@@ -27,16 +39,16 @@ export default {
 
       // option.data = heatMapData
       // console.log(option.data)
-      myChart.showLoading()
+      // myChart.showLoading()
 
       myChart.setOption(option)
+      
       axios
         .get(
           'http://localhost:8089/gd/back_end/public/index.php/v1/destination/heatmap'
         )
         .then(response => {
           myChart.hideLoading()
-          // console.log(response.data)
           myChart.setOption({
             series: [
               {
@@ -44,8 +56,6 @@ export default {
               }
             ]
           })
-
-          // this.heatMapData = response.data
         })
         .catch(error => {
           console.log('asdasdsdasdasds')
@@ -54,7 +64,10 @@ export default {
     }
   },
   mounted() {
+    // 派发vuex action
+    // this.$store.dispatch('getHeatMapDate')
     this.drawChinaMap()
-  }
+  },
+  created() {}
 }
 </script>
