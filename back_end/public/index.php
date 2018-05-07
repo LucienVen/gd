@@ -18,6 +18,8 @@ header('Access-Control-Allow-Origin:*');
 header('Access-Control-Allow-Methods:POST, GET, OPTIONS');
 // 响应头设置
 header('Access-Control-Allow-Headers:x-requested-with,content-type');
+header('Access-Control-Allow-Headers:x-requested-with,content-type');
+header('Access-Control-Allow-Credentials:true');
 
 // 定义应用目录
 define('APP_PATH', __DIR__.'/../application/');
