@@ -1,11 +1,13 @@
 <?php
-// +----------------------------------------------------------------------
-// | When work is a pleasure, life is a joy!
-// +----------------------------------------------------------------------
-// | User: ShouKun Liu  |  Email:24147287@qq.com  | Time:2017/3/26 14:24
-// +----------------------------------------------------------------------
-// | TITLE: this to do?
-// +----------------------------------------------------------------------
+/**
+ * 身份认证
+ * Feature: 检测JWT认证身份和验证是否登录
+ * TIME:    2018-01-05 13:38:30
+ *
+ * @author Yven <yvenchang@163.com>
+ * @access public
+ * @todo
+**/
 
 namespace app\user\controller;
 
@@ -15,7 +17,7 @@ use think\Cookie;
 use Firebase\JWT\JWT;
 use app\user\Model\User;
 
-class Auth extends base
+class Auth extends Base
 {
     public $apiAuth = false;
     protected $token;
@@ -23,15 +25,10 @@ class Auth extends base
 
     /**
      * 获取认证
-     * @return void
+     * @return Json
      */
     public function login(Request $request)
     {
-        //  重复登录
-        if ($request->cookie('jwt')) {
-            return $this->sendError(405, 'Has login.', 405);
-        }
-
         $data = $request->post();
         $validate = validate('User');
 
@@ -41,7 +38,7 @@ class Auth extends base
         }
 
         $user = new User;
-        if ($userData = $user->where('username', $data['username'])->find()) {
+        if ($userData = $user->where(['email'=>$data['email'],'is_delete'=>0,'status'=>0])->find()) {
             if (password_verify($data['password'], $userData['password'])) {
                 if ($this->getToken($userData['uid'])->setToken()) {
                     unset($userData['password']);
@@ -50,6 +47,17 @@ class Auth extends base
             }
         }
         return $this->sendError(400, "user don't exist!", 400);
+    }
+
+    /**
+     * 退出登录
+     *
+     * @return Json
+     */
+    public function logout(Request $request)
+    {
+        Cookie::set('jwt', '', ['expire' => time()-1, 'httponly' => 'httponly']);
+        return $this->sendSuccess('logout success!');
     }
 
     /**

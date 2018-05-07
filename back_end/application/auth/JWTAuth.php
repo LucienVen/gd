@@ -1,10 +1,13 @@
 <?php
-
-// +----------------------------------------------------------------------
-// | User: YvenChang |  Email:yvenchang@163.com  | Time:2018-03-20
-// +----------------------------------------------------------------------
-// | TITLE: JWT 身份认证
-// +----------------------------------------------------------------------
+/**
+ * JWT认证类
+ * Feature: 为各模块提供登录验证功能
+ * TIME:    2018-01-05 14:21:41
+ *
+ * @author Yven <yvenchang@163.com>
+ * @access public
+ * @todo
+**/
 
 namespace app\auth;
 
@@ -33,10 +36,6 @@ class JWTAuth implements AuthContract
         try {
             // 获取认证信息
             if ($this->getClient($request)) {
-                //  验证时间
-                if ($this->token['exp'] < time()) {
-                    return false;
-                }
                 //  验证发放者
                 if ($this->token['iss'] != Config::get('iss') || $this->token['aud'] != Config::get('aud')) {
                     return false;
@@ -44,14 +43,13 @@ class JWTAuth implements AuthContract
                 //  认证通过
                 return true;
             }
-            // ->certification($request);
-        } catch (UnauthorizedException $e) {
+        } catch (\Exception $e) {
             return $e;
         }
     }
 
     /**
-     * 获取客户端信息.
+     * 获取客户端JWT信息.
      *
      * @param Request $request
      *
@@ -69,7 +67,7 @@ class JWTAuth implements AuthContract
     }
 
     /**
-     * 获取用户信息.
+     * just implement interface
      *
      * @return mixed
      */

@@ -7,6 +7,15 @@ use think\Db;
 
 class Destination extends Base
 {
+    public function index(Request $request)
+    {
+    }
+
+    /**
+     * 热力图数据
+     *
+     * @return JSON
+     */
     public function heatMap(Request $request)
     {
         // get all province info

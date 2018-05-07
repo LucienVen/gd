@@ -6,7 +6,7 @@ use think\Model;
 class User extends Model
 {
     protected $pk = 'uid';
-    protected $readonly = ['username'];
+    protected $readonly = ['email'];
 
     protected function setPasswordAttr($value)
     {

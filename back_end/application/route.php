@@ -24,6 +24,7 @@ Route::any('/test', function(){
 Route::group('v1',function (){
     // Route::any('user/sendCode','demo/User/sendCode');
     Route::post('auth', 'user/Auth/login');
+    Route::delete('auth', 'user/Auth/logout');
     Route::resource('user','user/User');
     Route::resource('plan', 'plan/Plan');
     Route::resource('destination', 'destination/Destination');
