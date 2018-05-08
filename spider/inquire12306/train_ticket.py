@@ -73,6 +73,7 @@ class TrainTicket():
             print('code1 fffffffffffff')
         data = res.json()['data']['result']
 
+        susu = []
         # 解析数据信息
         for i in data:
             # 把字符串用“|”分割成数组
@@ -112,8 +113,11 @@ class TrainTicket():
 
             else:
                 result['status'] = "0"
-
-            pprint(result)
+            susu.append(result)
+        return susu
+            # pprint(result)
+            # return result
+            # yield result
 
             # yield(self.check_station_no(result))
 
@@ -172,6 +176,8 @@ def main():
                               departure_time)
     res = trainTicket.train_table()
     pprint(res)
+    # for i in res:
+    #     print(i)
     # trainTicket.run()
 
 
