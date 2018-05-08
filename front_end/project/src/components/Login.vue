@@ -68,21 +68,32 @@ export default {
         const querystring = require('querystring')
         if (valid) {
           // this.ruleLogin
-          axios.post('http://localhost:8089/gd/back_end/public/index.php/v1/auth',
-            querystring.stringify({
-              'email': this.ruleLogin.email,
-              'password': this.ruleLogin.pass
+          axios
+            .post(
+              'http://localhost:8089/gd/back_end/public/index.php/v1/auth',
+              querystring.stringify({
+                'email': this.ruleLogin.email,
+                'password': this.ruleLogin.pass
+              })
+              // {
+              //   email: this.ruleLogin.email,
+              //   password: this.ruleLogin.pass
+              // },
+              // withCredentials:true
+            )
+            .then(function(response) {
+              // if(response.data.Error)
+              alert('登录成功！')
+              // this.$router.push('/')
+              
+              // this.$router
+              // router.go('/')
+              window.location.href = 'http://localhost:8080/'
+              console.log(response)
             })
-            
-          ).then(function(response){
-            // if(response.data.Error)
-            alert('登录成功！')
-            return this.$router.push('/')
-            console.log(response)
-          }).catch(function(response){
-            console.log(response)
-          })
-
+            .catch(function(response) {
+              console.log(response)
+            })
 
           // axios
           //   .post(
