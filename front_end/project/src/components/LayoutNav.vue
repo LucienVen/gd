@@ -45,7 +45,6 @@ export default {
     }
   },
   computed: {
-    
     checkLogin() {
       if (this.username != '') {
         return (this.isLogin = true)
@@ -66,18 +65,25 @@ export default {
       .catch(function(error) {
         console.log(error)
       })
-
-      
   },
   methods: {
     logOut() {
-      axios
-        .delete('http://localhost:8089/gd/back_end/public/index.php/v1/auth')
-        .then(function(response) {
-          alert(response)
-        }).catch(function(response){
-          console.log(response)
-        })
+      // axios
+      //   .delete('http://localhost:8089/gd/back_end/public/index.php/v1/auth')
+      //   .then(function(response) {
+      //     alert(response)
+      //   }).catch(function(response){
+      //     console.log(response)
+      //   })
+      axios({
+        method: 'delete',
+        url: 'http://localhost:8089/gd/back_end/public/index.php/v1/auth',
+        withCredentials: true
+      }).then(function(response){
+        alert('退出成功！')
+        window.location.href='http://localhost:8080'
+      })
+
     },
     hello() {
       alert('Hello, world!!')
