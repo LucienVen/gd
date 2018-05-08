@@ -10,6 +10,7 @@ import requests
 from pprint import pprint
 from station_names import station_names
 import time
+import sys
 
 header = {
     'User-Agent':
@@ -18,9 +19,9 @@ header = {
     'JSESSIONID=4DA515887C9399EF8B615DB6E0EE6D2F; _jc_save_wfdc_flag=dc; _jc_save_fromStation=%u5E7F%u5DDE%2CGZQ; _jc_save_toStation=%u53A6%u95E8%2CXMS; route=9036359bb8a8a461c164a04f8f50b252; BIGipServerotn=368050698.50210.0000; RAIL_EXPIRATION=1524004307486; RAIL_DEVICEID=P0N7kqC4Q0I3Pwd8Ekxl9G9sCrEYHKKdt25n65kBHOqpEMelQ9-4geyGkm0hdxQL-eBIkQVBIQbt5Zzgxh3WHPm_vZ6XTOtWCS5C9hHSPSCWYTOSnxse1DhHogjW95jK5RL3n1u0vsHM306GXg18s_hvGaTF38IE; _jc_save_fromDate=2018-04-14; _jc_save_toDate=2018-04-14'
 }
 
-from_station = input("your left station: ")
-to_station = input('the station your want to arrival: ')
-departure_time = input('departure time(example: 2018-03-01): ')
+# from_station = input("your left station: ")
+# to_station = input('the station your want to arrival: ')
+# departure_time = input('departure time(example: 2018-03-01): ')
 
 
 class TrainTicket():
@@ -29,8 +30,8 @@ class TrainTicket():
         self.header = {
             'User-Agent':
             'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36',
-            'Cookie':
-            'JSESSIONID=4DA515887C9399EF8B615DB6E0EE6D2F; _jc_save_wfdc_flag=dc; _jc_save_fromStation=%u5E7F%u5DDE%2CGZQ; _jc_save_toStation=%u53A6%u95E8%2CXMS; route=9036359bb8a8a461c164a04f8f50b252; BIGipServerotn=368050698.50210.0000; RAIL_EXPIRATION=1524004307486; RAIL_DEVICEID=P0N7kqC4Q0I3Pwd8Ekxl9G9sCrEYHKKdt25n65kBHOqpEMelQ9-4geyGkm0hdxQL-eBIkQVBIQbt5Zzgxh3WHPm_vZ6XTOtWCS5C9hHSPSCWYTOSnxse1DhHogjW95jK5RL3n1u0vsHM306GXg18s_hvGaTF38IE; _jc_save_fromDate=2018-04-14; _jc_save_toDate=2018-04-14'
+            'Cookie':'JSESSIONID=007A7A223DC8368392BF23B92C612BF1; _jc_save_wfdc_flag=dc; _jc_save_fromStation=%u5E7F%u5DDE%2CGZQ; _jc_save_toStation=%u53A6%u95E8%2CXMS; RAIL_EXPIRATION=1524004307486; RAIL_DEVICEID=P0N7kqC4Q0I3Pwd8Ekxl9G9sCrEYHKKdt25n65kBHOqpEMelQ9-4geyGkm0hdxQL-eBIkQVBIQbt5Zzgxh3WHPm_vZ6XTOtWCS5C9hHSPSCWYTOSnxse1DhHogjW95jK5RL3n1u0vsHM306GXg18s_hvGaTF38IE; route=9036359bb8a8a461c164a04f8f50b252; BIGipServerotn=1977155850.64545.0000; _jc_save_fromDate=2018-05-08; _jc_save_toDate=2018-05-08'
+            
         }
 
         self.station_names = station_names
@@ -163,6 +164,10 @@ class TrainTicket():
 
 
 def main():
+    from_station = sys.argv[1]
+    to_station = sys.argv[2]
+    departure_time = sys.argv[3]
+
     trainTicket = TrainTicket(station_names, from_station, to_station,
                               departure_time)
     res = trainTicket.train_table()
