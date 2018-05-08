@@ -7,6 +7,7 @@ use think\Db;
 use think\Config;
 use app\pathplan\model\Pathplan as PlanModel;
 use app\pathplan\model\PathplanStepDay as PlanDayModel;
+use app\destination\model\Destination as DesModel;
 
 class Pathplan extends Base
 {
@@ -35,6 +36,7 @@ class Pathplan extends Base
             return $this->sendError(400, "Error!");
         }
 
+        $desModel = new DesModel;
         // 获取主数据
         $planModel = PlanModel::get(function($query) use ($id){
             $query->where(['id' => $id])->field('status,create_time,update_time,is_delete',true);
@@ -48,6 +50,11 @@ class Pathplan extends Base
         // 获取索引对象并查询详情数据
         foreach ($day as $key => $planDayModel) {
             $detail = $planDayModel->detail()->field('create_time,update_time',true)->select();
+            foreach ($detail as $dk => $planDetailModel) {
+                // 获取景点名称
+                $detail[$dk]['start_name'] = $desModel->where(['id'=>$planDetailModel['start_des']])->value('name');
+                $detail[$dk]['end_name'] = $desModel->where(['id'=>$planDetailModel['end_des']])->value('name');
+            }
             $day[$key]['detail'] = $detail;
         }
         $data = $planModel->toArray();
