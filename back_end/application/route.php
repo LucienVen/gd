@@ -33,6 +33,7 @@ Route::group('v1',function (){
         Route::get('/heatmap', 'destination/Destination/heatMap');
     });
     Route::post('design', 'plan/Design');
+    Route::post('train', 'other/Ticket/train');
 });
 
 //Oauth
