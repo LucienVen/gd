@@ -72,7 +72,7 @@ class Auth extends Base
     {
         $this->jwt = array('iss' => Config::get('iss'),
                     'aud' => Config::get('aud'),
-                    'exp' => time()+7*24,
+                    'exp' => time()+3600*24,
                     'uid' => $uid);
 
         $this->token = JWT::encode($this->jwt, Config::get('jwt_key'));

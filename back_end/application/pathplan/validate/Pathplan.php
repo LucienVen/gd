@@ -9,7 +9,8 @@ class Pathplan extends Validate
     protected $rule = [
           'name' => 'require|max:32',
           'cost_time' => 'require|number',
-          'cover_url' => 'url'
+          'cover_url' => 'url',
+          'go_off' => 'require|date'
       ];
 
     // protected $scene = [];
