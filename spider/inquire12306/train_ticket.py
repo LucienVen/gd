@@ -31,7 +31,7 @@ class TrainTicket():
             'User-Agent':
             'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36',
             'Cookie':'JSESSIONID=007A7A223DC8368392BF23B92C612BF1; _jc_save_wfdc_flag=dc; _jc_save_fromStation=%u5E7F%u5DDE%2CGZQ; _jc_save_toStation=%u53A6%u95E8%2CXMS; RAIL_EXPIRATION=1524004307486; RAIL_DEVICEID=P0N7kqC4Q0I3Pwd8Ekxl9G9sCrEYHKKdt25n65kBHOqpEMelQ9-4geyGkm0hdxQL-eBIkQVBIQbt5Zzgxh3WHPm_vZ6XTOtWCS5C9hHSPSCWYTOSnxse1DhHogjW95jK5RL3n1u0vsHM306GXg18s_hvGaTF38IE; route=9036359bb8a8a461c164a04f8f50b252; BIGipServerotn=1977155850.64545.0000; _jc_save_fromDate=2018-05-08; _jc_save_toDate=2018-05-08'
-            
+
         }
 
         self.station_names = station_names
@@ -59,18 +59,18 @@ class TrainTicket():
         }
 
     def train_table(self):
-        print(self.departure_time)
-        print(self.station_names[self.from_station])
-        print(self.station_names[self.to_station])
-        
+        # print(self.departure_time)
+        # print(self.station_names[self.from_station])
+        # print(self.station_names[self.to_station])
+
         res = requests.get(
             # 这里经常需要更改请求url
             "https://kyfw.12306.cn/otn/leftTicket/query?leftTicketDTO.train_date={}&leftTicketDTO.from_station={}&leftTicketDTO.to_station={}&purpose_codes=ADULT".format(self.departure_time, self.station_names[self.from_station],self.station_names[self.to_station]),headers=self.header,verify=False)
-            
-        if res.status_code == 200:
-            print("code 1 succ!")
-        else:
-            print('code1 fffffffffffff')
+
+        # if res.status_code == 200:
+        #     print("code 1 succ!")
+        # else:
+        #     print('code1 fffffffffffff')
         data = res.json()['data']['result']
 
         susu = []
@@ -115,13 +115,13 @@ class TrainTicket():
                 result['status'] = "0"
             susu.append(result)
         return susu
-            # pprint(result)
-            # return result
-            # yield result
+        # pprint(result)
+        # return result
+        # yield result
 
-            # yield(self.check_station_no(result))
+        # yield(self.check_station_no(result))
 
-            # return result
+        # return result
 
     # 查询列车站点号
     def check_station_no(self, trans_no, from_s, to_s):
@@ -162,7 +162,12 @@ class TrainTicket():
         for key in res:
             if key in self.seat_trans.keys():
                 # print(self.seat_trans[key], res[key])
-                result.append((self.seat_trans[key], res[key]))
+                seat_dict = {}
+                seat_dict['seat_type'] = self.seat_trans[key]
+                seat_dict['seat_price'] = res[key]
+                # seat_dict[self.seat_trans[key]] = res[key]
+                # result.append((self.seat_trans[key], res[key]))
+                result.append(seat_dict)
 
         return result
 
@@ -175,7 +180,7 @@ def main():
     trainTicket = TrainTicket(station_names, from_station, to_station,
                               departure_time)
     res = trainTicket.train_table()
-    pprint(res)
+    print(res)
     # for i in res:
     #     print(i)
     # trainTicket.run()
