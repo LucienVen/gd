@@ -42,6 +42,7 @@ class Ticket extends Base
 
         $search = $data['start'].' '.$data['end'].' '.$data['time'];
         $condition = $this->code.$this->py_version.' '.$this->train_py.' '.$search;
+        // 执行外部爬虫脚本
         exec($condition, $res, $var);
         $res = json_decode(str_replace("'",'"', $res[0]), true);
 

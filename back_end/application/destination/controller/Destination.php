@@ -5,7 +5,8 @@ namespace app\destination\controller;
 use think\Request;
 use think\Db;
 use think\Config;
-use app\destination\model\destination as DesModel;
+use app\destination\model\Destination as DesModel;
+use app\destination\model\DestinationTypes as DesTypeModel;
 
 class Destination extends Base
 {
@@ -73,11 +74,13 @@ class Destination extends Base
     public function read($id)
     {
         $desModel = new DesModel;
+        $desTypeModel = new DesTypeModel;
         if (is_numeric($id)) {
             $data = $desModel->where(['des.id'=>$id, 'is_delete'=>0, 'status'=>0])
                             ->alias('des')
                             ->join($this->join)
                             ->find();
+            $data['type_name'] = $desTypeModel->where(['id' => $data['type_id']])->value('name');
             return $this->sendSuccess($data);
         }
         return $this->sendError(400, 'destination id must be numeric');

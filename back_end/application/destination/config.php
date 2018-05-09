@@ -13,10 +13,4 @@ return [
         'auth_class' => \app\auth\JWTAuth::class, //授权认证类
         'api_debug'=> true,//是否开启调试
     ],
-
-    'condition' => [
-        'page' => 1,
-        'per_page' => 10,
-        'order' => 1
-    ]
 ];

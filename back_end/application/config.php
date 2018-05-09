@@ -232,5 +232,13 @@ return [
     // jwt 秘钥配置
     'jwt_key' => 'YvenChangScrect',
     'iss' => 'YvenChang',
-    'aud' => 'http://yvenchang.xyz'
+    'aud' => 'http://yvenchang.xyz',
+
+
+    // 默认查询条件
+    'condition' => [
+        'page' => 1,
+        'per_page' => 10,
+        'order' => 1
+    ]
 ];
