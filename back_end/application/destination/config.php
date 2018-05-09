@@ -9,7 +9,7 @@
 
 return [
     'api' => [
-        'api_auth' => true,  //是否开启授权认证
+        'api_auth' => false,  //是否开启授权认证
         'auth_class' => \app\auth\JWTAuth::class, //授权认证类
         'api_debug'=> true,//是否开启调试
     ],
