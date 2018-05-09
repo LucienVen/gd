@@ -12,7 +12,7 @@ use app\destination\model\Destination as DesModel;
 class Pathplan extends Base
 {
     //跳过鉴权的方法
-    protected $skipAuthActionList = ['index', 'read'];
+    protected $skipAuthActionList = ['read'];
     /**
      * 获取用户所有路线
      *
@@ -21,6 +21,50 @@ class Pathplan extends Base
      */
     public function index(Request $request)
     {
+        // 处理分页参数
+        $param = $request->get();
+        $page = !isset($param['page'])?Config::get('condition.page'):$param['page'];
+        $perpage = !isset($param['perpage'])?Config::get('condition.per_page'):$param['perpage'];
+
+        // 初始化查询条件
+        $planModel = new PlanModel;
+        $con = ['uid' => parent::$app['auth']->token['uid'], 'is_delete' => 0, 'status' => 0];
+        $notfield = ['is_delete','status','create_time','update_time'];
+
+        // 查询
+        $count = $planModel->where($con)->count();
+        $data = $planModel->where($con)->field($notfield, true)->page($page, $perpage)->select();
+        $res = [
+            'count' => $count,
+            'page' => $page,
+            'perpage' => $perpage,
+            'data' => $data
+        ];
+
+        return $this->sendSuccess($res);
+    }
+
+    /**
+     * 删除路线
+     *
+     * @param Int $id
+     * @return Json
+     */
+    public function delete($id)
+    {
+        $planModel = new PlanModel;
+        $data = $planModel->where(['id' => $id])->find();
+        // 修改权限
+        if ($data['uid'] == parent::$app['auth']->token['uid']) {
+            try {
+                $data->save(['is_delete' => 1]);
+            } catch(\Exception $e) {
+                return $this->sendError($e->getCode(), $e->getMessage(), 500);
+            }
+            return $this->sendSuccess('Delete Success!');
+        }
+
+        return $this->sendError("you cant do this :(", 401);
     }
 
     /**
