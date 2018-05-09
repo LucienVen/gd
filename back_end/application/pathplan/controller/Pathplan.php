@@ -1,4 +1,13 @@
 <?php
+/**
+ * 路线类
+ * Feature: 查询用户路线概要/查询路线详情/保存路线/删除路线
+ * Time:    2018-05-09 15:24:28
+ *
+ * @author Yven <yvenchang@163.com>
+ * @access public
+ * @todo
+**/
 
 namespace app\pathplan\controller;
 
