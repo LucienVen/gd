@@ -42,7 +42,7 @@ class Auth extends Base
                             ->field($this->notField,true)
                             ->find()) {
             if (password_verify($data['password'], $userData['password'])) {
-                if ($this->getToken($userData['uid'])->setToken($request)) {
+                if ($this->getToken($userData->toArray())->setToken($request)) {
                     unset($userData['password']);
                     return $this->sendSuccess($userData, 'login success!');
                 }
@@ -65,15 +65,16 @@ class Auth extends Base
     /**
      * 获取令牌
      *
-     * @param Int $uid
+     * @param Array $userData
      * @return app\user\Auth
      */
-    protected function getToken($uid)
+    protected function getToken($userData)
     {
         $this->jwt = array('iss' => Config::get('iss'),
                     'aud' => Config::get('aud'),
                     'exp' => time()+3600*24,
-                    'uid' => $uid);
+                    'uid' => $userData['uid'],
+                    'root' => $userData['root']);
 
         $this->token = JWT::encode($this->jwt, Config::get('jwt_key'));
 

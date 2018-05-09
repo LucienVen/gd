@@ -51,9 +51,13 @@ class User extends Base
     public function save(Request $request)
     {
         $data = $request->post();
-        unset($data['root']);
+        // unset($data['root']);
         $user = new UserModel;
         $validate = validate('User');
+        // 自动填充用户名选项
+        if (!isset($data['username'])) {
+            $data['username'] = $data['email'];
+        }
 
         //  验证
         if (!$validate->scene('signup')->check($data)) {
@@ -74,8 +78,30 @@ class User extends Base
      * @param Request $request
      * @return Json
      */
-    public function update(Request $request)
+    public function update($id, Request $request)
     {
+        $data = $request->put();
+        // 修改权限检查
+        if ($id != parent::$app['auth']->token['uid'] && parent::$app['auth']->token['root'] == 1) {
+            return $this->sendError(400, "Dont change other users info!", 400);
+        }
+        $user = new UserModel;
+        $validate = validate('User');
+
+        // 验证
+        if (is_null($data)) {
+            return $this->sendError(400, "Havent change anything", 400);
+        }
+        if (!$validate->scene('update')->check($data)) {
+            return $this->sendError(400, $validate->getError(), 400);
+        }
+
+        // 更新
+        if (!$user->allowField(true)->save($data, ['uid' => $id])) {
+            return $this->sendError(500, 'Update user fielded, try it again later.', 500);
+        }
+
+        return $this->sendSuccess($id, 'Update success!');
     }
 
     /**
