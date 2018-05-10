@@ -1,0 +1,113 @@
+export const ticket = [{
+    'train': 'D937',
+    'train_code': '6c0000D9370F',
+    'from_station': '广州南',
+    'to_station': '厦门北',
+    'start_time': '19:30',
+    'end_time': '23:25',
+    'is_same_day': '隔日抵达',
+    'take_time': '03:55',
+    'seat_type': 'AOF',
+    'status': '1',
+    'station_no': {
+        'from_s_no': '01',
+        'to_s_no': '04'
+    },
+    'seat': [{
+        'seat_type': '动卧',
+        'seat_price': '¥310.0'
+    }, {
+        'seat_type': '高级软卧',
+        'seat_price': '¥380.0'
+    }, {
+        'seat_type': '无座',
+        'seat_price': '¥197.5'
+    }, {
+        'seat_type': '二等座',
+        'seat_price': '¥197.5'
+    }]
+}, {
+    'train': 'D943',
+    'train_code': '6e0000D94200',
+    'from_station': '广州南',
+    'to_station': '厦门北',
+    'start_time': '19:35',
+    'end_time': '23:30',
+    'is_same_day': '隔日抵达',
+    'take_time': '03:55',
+    'seat_type': 'OFA',
+    'status': '1',
+    'station_no': {
+        'from_s_no': '03',
+        'to_s_no': '06'
+    },
+    'seat': [{
+        'seat_type': '动卧',
+        'seat_price': '¥310.0'
+    }, {
+        'seat_type': '高级软卧',
+        'seat_price': '¥380.0'
+    }, {
+        'seat_type': '无座',
+        'seat_price': '¥197.5'
+    }, {
+        'seat_type': '二等座',
+        'seat_price': '¥197.5'
+    }]
+}, {
+    'train': 'K229',
+    'train_code': '800000K2320S',
+    'from_station': '广州',
+    'to_station': '厦门',
+    'start_time': '20:38',
+    'end_time': '08:58',
+    'is_same_day': '隔日抵达',
+    'take_time': '12:20',
+    'seat_type': '1413',
+    'status': '1',
+    'station_no': {
+        'from_s_no': '21',
+        'to_s_no': '32'
+    },
+    'seat': [{
+        'seat_type': '硬座',
+        'seat_price': '¥102.0'
+    }, {
+        'seat_type': '软卧',
+        'seat_price': '¥274.0'
+    }, {
+        'seat_type': '硬卧',
+        'seat_price': '¥178.0'
+    }, {
+        'seat_type': '无座',
+        'seat_price': '¥102.0'
+    }]
+}, {
+    'train': 'K297',
+    'train_code': '650000K2970D',
+    'from_station': '广州东',
+    'to_station': '厦门',
+    'start_time': '20:42',
+    'end_time': '08:05',
+    'is_same_day': '隔日抵达',
+    'take_time': '11:23',
+    'seat_type': '1413',
+    'status': '1',
+    'station_no': {
+        'from_s_no': '01',
+        'to_s_no': '16'
+    },
+    'seat': [{
+        'seat_type': '硬座',
+        'seat_price': '¥130.0'
+    }, {
+        'seat_type': '软卧',
+        'seat_price': '¥340.0'
+    }, {
+        'seat_type': '硬卧',
+        'seat_price': '¥222.0'
+    }, {
+        'seat_type': '无座',
+        'seat_price': '¥130.0'
+    }]
+}]

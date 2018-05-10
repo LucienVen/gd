@@ -4,26 +4,35 @@
     <el-card :body-style="{ padding: '0px' }" shadow="hover">
       <div slot="header" class="aDay">
         <!-- <p>{{diaTitle}}</p> -->
+        <!-- <div>{{storeShowDayDetail}}</div> -->
         <div class="aDayTime">5月2日</div>
+        <!-- <div class="aDayTime">{{storeShowDayTime}}</div> -->
         <!-- <div>地点</div> -->
-        <div>厦门</div>
+
+        <div>
+          厦 门
+          <!-- {{storeMoveCity}} -->
+          <!-- {{tempPlanData}} -->
+          <!-- <el-button size="mini" type="" @click="getViewpointList">test</el-button> -->
+        </div>
         <div style="width:50%; font-size:10px; color:#9f9f9f;">
           规划行程时间: 适中
           <el-progress :percentage="50" color="#7DC28F"></el-progress>
         </div>
       </div>
-      <div v-for="(i, index) in test" class="dayItem">
-        <a href="javascript:void(0);" class="itemTitle" :class="{mouseOut:isMouseOut[0],mouseOver:isMouseOver[0]}" @mouseover="overOrOutShow(index)" @mouseout="overOrOutShow(index)" :key="i.name" @click="isShow();$store.commit('storeSelectDiaTitle', i.name)">
+      <div v-for="(i, index) in storeShowDayDetail['detail']" class="dayItem">
+        <a href="javascript:void(0);" class="itemTitle" :class="{mouseOut:isMouseOut[0],mouseOver:isMouseOver[0]}" @mouseover="overOrOutShow(index)" @mouseout="overOrOutShow(index)" :key="i.name" @click="isShow(i.start_des);$store.commit('storeSelectDiaTitle', i.start_name);">
           <i class="el-icon-star-off"></i>
-          {{i.name}}
+          {{i.start_name}}
           <!-- {{isMouseOut[index]}}     -->
         </a>
         <div class="itemTraffic">
-          123
+          {{i.distance}}
         </div>
       </div>
 
     </el-card>
+    <!-- {{axiosDataList}} -->
 
     <!-- <view-point-dia></view-point-dia> -->
 
@@ -31,27 +40,40 @@
       <!-- <span>{{storeDiaTitle}}</span> -->
       <!-- <div>{{scenicData}}</div> -->
       <hr style="margin-top:-20px;">
-      <div v-for="item in scenicData">
+      <div v-model="viewPointData">
+        <!-- <div > -->
+
         <!-- <p>{{item.name}}</p> -->
         <!-- <p>{{item.detail}}</p> -->
         <el-row :gutter="30" class="diaRow">
           <el-col :span="14">
             <div class="diaBackground">
-              <img :src="item.photo_url" alt="">
+              <img :src="viewPointData.cover_url" alt="">
             </div>
           </el-col>
           <el-col :span="10">
-            <div>
+            <div style="margin-top:5px">
               景点类型：
-              <span>{{item.type}}</span>
+              <span><b>{{viewPointData.type_name}}</b></span>
             </div>
-            <div v-if="item.level != null">
+            <div v-if="viewPointData.level != null" style="margin-top:5px">
+              
               景点星级：
-              <span>{{item.level}}</span>
+              <el-rate v-model="level2num" disabled text-color="#ff9900">
+              </el-rate>
+              <span v-show="false">{{rate(viewPointData.level)}}</span>
             </div>
-            <div>
+            <div style="margin-top:5px">
               建议游玩时长：
-              <span>{{item.play_time}}</span>
+              <span><b>{{viewPointData.cost_time}}</b> 小时</span>
+            </div>
+            <div style="margin-top:10px">
+              印象标签：
+              <!-- <div>
+                <el-tag v-for="m in viewPointData.impression.split(' ')" type="info" style="margin:2px;">{{m}}</el-tag>
+              </div> -->
+
+              <!-- <span>{{viewPointData.impression}}</span> -->
             </div>
           </el-col>
         </el-row>
@@ -62,7 +84,7 @@
                 <span>简介</span>
               </div>
               <div>
-                {{item.detail}}
+                {{viewPointData.description}}
               </div>
             </el-card>
           </el-col>
@@ -75,20 +97,23 @@
                   <i class="el-icon-location"></i>
                   地址：
                 </span>
-                {{item.location}}
+                {{viewPointData.location}}
               </div>
-              <div class="cardButtonLine" v-if="item.open_time != null">
+              <div class="cardButtonLine" v-if="viewPointData.open_time != null">
                 <span>
                   <i class="el-icon-time"></i>
                   开放时间：</span>
-                {{item.open_time}}
+                {{viewPointData.open_time}}
               </div>
-              <div class="cardButtonLine" v-if="item.ticket_msg != null">
+              <div class="cardButtonLine" v-if="viewPointData.ticket_msg != null">
                 <span>
                   <i class="el-icon-tickets"></i>
                   票务信息：</span>
-                {{item.ticket_msg}}
+                {{viewPointData.ticket_msg}}
               </div>
+              <!-- <div>
+                {{viewPointData}}
+              </div> -->
             </el-card>
 
           </el-col>
@@ -108,10 +133,18 @@
 // 引入store
 // import store from '../store/store.js'
 import store from '@/components/store/store.js'
+import axios from 'axios'
+axios.defaults.withCredentials = true
 // import ViewPointDialog from './ViewPointDialog'
 export default {
   data() {
     return {
+      // level
+      level2num: '',
+      // temp plan data
+      tempPlanData: '',
+      // 景点详细信息
+      viewPointData: '',
       // 鼠标事件
       isMouseOver: [],
       isMouseOut: [],
@@ -122,9 +155,10 @@ export default {
       dialogVisible: false,
 
       // notice框状态
-      noticeShow: false,
-      noticeMsg: 'Hello, world!',
-
+      // noticeShow: false,
+      // noticeMsg: 'Hello, world!',
+      axiosDataList: '123',
+      // BeginShowDayDetail: '',
       test: [
         { name: '鼓浪屿' },
         { name: '厦门大学' },
@@ -133,7 +167,21 @@ export default {
       ]
     }
   },
+  mounted() {
+    this.storeShowDay()
+    this.storeBeginShowDayDetail()
+  },
   computed: {
+    
+    // storeShowDayCity(){
+    //   return this.$store.state.showDayCity
+    // },
+    storeShowDayDetail() {
+      let showDay = this.$store.state.showDay
+      let storePlanRes = this.$store.state.testPlanRes['day'][showDay]
+      return storePlanRes
+    },
+    // -------------------------------
     // 获取store diaTitle
     lengthTest() {
       var isMouseOut = new Array()
@@ -144,7 +192,7 @@ export default {
       }
       this.isMouseOut = isMouseOut
       this.isMouseOver = isMouseOver
-      return null
+      // return null
     },
     getLength() {
       return this.test.length
@@ -155,10 +203,64 @@ export default {
     },
     scenicData() {
       return this.$store.state.scenicData
+    },
+    //   moveCity: '',
+    // showDayTime: '',
+    storeMoveCity() {
+      return this.$store.state.moveCity
+    },
+    storeShowDayTime() {
+      return this.$store.state.showDayTime
     }
   },
 
   methods: {
+    // 返回星级数字
+    rate(level){
+      return this.level2num = level.length
+    },
+    // 获取store showDay
+    storeShowDay() {
+      return this.$store.state.showDay
+    },
+    storeBeginShowDayDetail() {
+      let showDay = this.$store.state.showDay
+      let storePlanRes = this.$store.state.testPlanRes['day'][showDay]
+      this.tempPlanData = storePlanRes
+      // alert('asdasd')
+    },
+
+    // dialog 把景点列表信息存进
+    getViewPointData(v_id) {
+      var that = this
+      axios({
+        method: 'get',
+        url:
+          'http://localhost:8089/gd/back_end/public/index.php/v1/destination/' +
+          v_id,
+
+        withCredentials: true
+      }).then(function(response) {
+        // $store.commit('storeAllViewpointList', response.data.data['data'])
+        that.viewPointData = response.data.data
+        // alert(response.data.data)
+      })
+    },
+    // 景点列表
+    // getViewpointList() {
+    //   var that = this
+    //   axios({
+    //     method: 'get',
+    //     url:
+    //       'http://localhost:8089/gd/back_end/public/index.php/v1/destination?hot=1&city=厦门',
+    //     withCredentials: true
+    //   }).then(function(response) {
+    //     $store.commit('storeAllViewpointList', response.data.data['data'])
+    //     alert('success!')
+    //   })
+    // },
+    // 查询景点信息
+
     overOrOutShow(index) {
       this.isMouseOver[index] = !this.isMouseOver[index]
       this.isMouseOut[index] = !this.isMouseOut[index]
@@ -167,9 +269,11 @@ export default {
     //   this.isMouseOver = !this.isMouseOver
     //   this.isMouseOut = !this.isMouseOut
     // },
-    isShow() {
+    isShow(v_id) {
       console.log('isshow...')
-      return (this.dialogVisible = true)
+
+      this.dialogVisible = true
+      this.getViewPointData(v_id)
     }
     // notice() {
     //   if (this.noticeShow) {

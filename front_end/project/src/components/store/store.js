@@ -12,15 +12,24 @@ Vue.use(Vuex);
 
 // 设置全局变量
 const state = {
-  // 用户模块
-  // userInfo: {
-  //   uid: '',
-  //   nickName: '',
-  //   email: ''
-  // },
+
+  // 用户信息
+  email: '',
+  username: '',
+  // -------------------------
+  // 景点列表
+  testPlanRes: '',
+  // -------------------------
+
+  // 选择出发城市
+  beginCity: '',
 
   // 选择展示日期
-  showDay: '',
+  showDay: '0',
+  moveCity: '',
+  showDayTime: '',
+  // showDayCity: '',
+
   // test travel data
   testTravelDate: {
     '1': {
@@ -28,8 +37,7 @@ const state = {
       'travelDate': '5月1日',
       'from_city': '广州',
       'to_city': '厦门',
-      'viewpoint': [
-        {
+      'viewpoint': [{
           'v_id': 1,
           'name': '鼓浪屿'
         },
@@ -48,8 +56,7 @@ const state = {
       'travelDate': '5月2日',
       'from_city': null,
       'to_city': '厦门',
-      'viewpoint': [
-        {
+      'viewpoint': [{
           'v_id': 1,
           'name': '金瓜楼'
         },
@@ -68,8 +75,7 @@ const state = {
       'travelDate': '5月3日',
       'from_city': '厦门',
       'to_city': '广州',
-      'viewpoint': [
-        {
+      'viewpoint': [{
           'v_id': 1,
           'name': '南普陀寺'
         },
@@ -119,13 +125,13 @@ const state = {
   ],
 
   // 静态出行日期数据
-  travelDateList: {'1':{
+  travelDateList: {
+    '1': {
       'day': 1,
       'travelDate': '5月1日',
       'from_city': '广州',
       'to_city': '厦门',
-      'viewpoint':[
-        {
+      'viewpoint': [{
           'v_id': 1,
           'name': '鼓浪屿'
         },
@@ -139,13 +145,12 @@ const state = {
         }
       ]
     },
-    '2':{
+    '2': {
       'day': 2,
       'travelDate': '5月2日',
       'from_city': null,
       'to_city': '厦门',
-      'viewpoint': [
-        {
+      'viewpoint': [{
           'v_id': 1,
           'name': '金瓜楼'
         },
@@ -159,13 +164,12 @@ const state = {
         }
       ]
     },
-    '3':{
+    '3': {
       'day': 3,
       'travelDate': '5月3日',
       'from_city': '厦门',
       'to_city': '广州',
-      'viewpoint': [
-        {
+      'viewpoint': [{
           'v_id': 1,
           'name': '南普陀寺'
         },
@@ -318,6 +322,16 @@ const state = {
 // 设置同步方法
 const mutations = {
 
+  // 用户信息
+  storeEmail(state, email){
+    state.email = email
+  },
+  storeUserName(state, username) {
+    state.username = username
+  },
+
+
+
   // 重置
   reset(state) {
     // 选择列车班次
@@ -325,19 +339,28 @@ const mutations = {
 
     // 是否票务查询
     state.isTicketingInquiry = ''
-      // 选择出行方式
+    // 选择出行方式
     state.travelMode = ''
-      // 出现日程选择
+    // 出现日程选择
     state.schedule = ''
-      // 选择行程舒适度
+    // 选择行程舒适度
     state.travelComfort = ''
-      //   选择酒店类型
+    //   选择酒店类型
     state.hotelType = ''
-      // 选择出行城市
+    // 选择出行城市
     state.selectCityVal = ''
+    // 选择出发chengs
+    state.beginCity = ''
     // 选择景点类型
     state.selectType = ''
   },
+
+
+  storeTestPlanRes(state, testPlanRes) {
+    state.testPlanRes = testPlanRes
+  },
+
+
 
   // HeatMap
   // storeSetHeatMapData(state, heatMapData){
@@ -383,17 +406,35 @@ const mutations = {
   storeHotelType(state, hotelType) {
     state.hotelType = hotelType
   },
-
-
   // 更新选择展示日期行程
   storeShowDay(state, showDay) {
     state.showDay = showDay
+    // state.showDayCity = showDayCity
   },
+  
+  
+  storeShowDayTime(state, showDayTime) {
+    state.showDayTime = showDayTime
+  },
+  storeMoveCity(state, moveCity) {
+    state.moveCity = moveCity
+  },
+
+
+
+  // 更新出发城市
+  storeBeginCity(state, beginCity) {
+    state.beginCity = beginCity
+  }
 }
 
 // 设置获取过滤
 const getters = {
-  storeRecommendType: function (state) {},
+  // 出发城市代号-名称转化n
+  // storeCityCode2Name(state){
+  //   let cityCode = state.beginCity
+  // },
+  // storeRecommendType: function (state) {},
   storeRecPointType(state) {
     let typeList = state.typeList
     //   定义排序规则

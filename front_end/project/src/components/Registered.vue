@@ -45,24 +45,9 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   data() {
-    // var checkAge = (rule, value, callback) => {
-    //   if (!value) {
-    //     return callback(new Error('年龄不能为空'))
-    //   }
-    //   setTimeout(() => {
-    //     if (!Number.isInteger(value)) {
-    //       callback(new Error('请输入数字值'))
-    //     } else {
-    //       if (value < 18) {
-    //         callback(new Error('必须年满18岁'))
-    //       } else {
-    //         callback()
-    //       }
-    //     }
-    //   }, 1000)
-    // }
     var validatePass = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入密码'))
@@ -115,10 +100,31 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          for (var i in this.show) {
-            console.log(this.show[i])
-          }
-          alert('submit!')
+          // for (var i in this.show) {
+          //   console.log(i)
+          //   console.log(this.show[i])
+          // }
+          // console.log(this.show['email'])
+          let that = this
+          // var params = new URLSearchParams()
+          // params.append('email', this.show['email'])
+          // params.append('password', this.show['password'])
+          // params.append('password_confirm', this.show['password_confirm'])
+          axios({
+            method: 'post',
+            url: 'http://localhost:8089/gd/back_end/public/index.php/v1/user',
+            data: {
+              'email': that.show['email'],
+              'password': that.show['pass'],
+              'password_confirm': that.show['checkPass']
+            },
+            // data: params,
+            withCredentials: true
+          }).then(function(response) {
+            alert('注册成功！')
+            window.location.href = 'http://localhost:8080/#/login'
+          })
+          // alert('submit!')
         } else {
           console.log('error submit!!')
           return false

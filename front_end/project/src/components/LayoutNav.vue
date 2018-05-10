@@ -6,9 +6,11 @@
         <router-link to="/">TOUR PLAN</router-link>
       </el-menu-item>
       <el-submenu v-if="checkLogin" index="2" class="menu-item">
-        <template slot="title">{{username}}</template>
+        <template slot="title">{{showID}}</template>
         <!-- <template v-else slot="title">{{user}}</template> -->
-        <el-menu-item index="2-1">个人中心</el-menu-item>
+        <router-link to="/person">
+          <el-menu-item index="2-1">个人中心</el-menu-item>
+        </router-link>
         <el-menu-item index="2-2" @click="logOut">退出登录</el-menu-item>
       </el-submenu>
       <el-submenu v-else index="2" class="menu-item">
@@ -49,6 +51,14 @@ export default {
       if (this.username != '') {
         return (this.isLogin = true)
       }
+    },
+    showID(){
+      let username = this.$store.state.username
+      if(username !== ''){
+        return username
+      }else{
+        return this.$store.state.email
+      }
     }
   },
 
@@ -60,30 +70,29 @@ export default {
     axios
       .get('http://localhost:8089/gd/back_end/public/index.php/v1/user')
       .then(function(response) {
+        // 更新store
         that.username = response.data.data.username
+        that.$store.commit('storeEmail', response.data.data.email)
+        console.log(that.$store.state.email)
+        that.$store.commit('storeUserName', response.data.data.username)
+        console.log(that.$store.state.username)
       })
       .catch(function(error) {
         console.log(error)
       })
   },
   methods: {
+    // 注销
     logOut() {
-      // axios
-      //   .delete('http://localhost:8089/gd/back_end/public/index.php/v1/auth')
-      //   .then(function(response) {
-      //     alert(response)
-      //   }).catch(function(response){
-      //     console.log(response)
-      //   })
       axios({
         method: 'delete',
         url: 'http://localhost:8089/gd/back_end/public/index.php/v1/auth',
         withCredentials: true
-      }).then(function(response){
+      }).then(function(response) {
+        // 更新store
         alert('退出成功！')
-        window.location.href='http://localhost:8080'
+        window.location.href = 'http://localhost:8080'
       })
-
     },
     hello() {
       alert('Hello, world!!')
@@ -111,7 +120,9 @@ export default {
     // getStore(){
     //   console.log($store.state.typeList)
     // }
-  }
+  },
+  store
+
   // components: {
   //   'log-in': Login,
   //   'about': About
