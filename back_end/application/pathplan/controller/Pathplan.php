@@ -167,6 +167,8 @@ class Pathplan extends Base
                 // 路程详情表数据
                 $det[$k]['index'] = $k+1;
                 unset($det[$k]['id']);
+                unset($det[$k]['start_name']);
+                unset($det[$k]['end_name']);
             }
             $totalDetail[$key] = $det;
         }
