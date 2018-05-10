@@ -66,6 +66,9 @@ class Destination extends Base
                             ->page($page,$perpage)
                             ->field($field)
                             ->select();
+            foreach ($data as $key => $value) {
+                $data[$key]['impression'] = explode(' ', $data[$key]['impression']);
+            }
             $res['data'] = $data;
             $res['count'] = $num;
             $res['page'] = $page;
@@ -90,6 +93,7 @@ class Destination extends Base
                             ->join($this->join)
                             ->find();
             $data['type_name'] = $desTypeModel->where(['id' => $data['type_id']])->value('name');
+            $data['impression'] = explode(' ', $data['impression']);
             return $this->sendSuccess($data);
         }
         return $this->sendError(400, 'destination id must be numeric');
