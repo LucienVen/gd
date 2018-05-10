@@ -174,10 +174,10 @@ class Pathplan extends Base
         // 执行存储
         Db::transaction(function() use ($pathplan, $day, $totalDetail) {
             $pm = new PlanModel;
-            $pm->save($pathplan);
+            $pm->allowField(true)->save($pathplan);
             foreach ($day as $key => $value) {
-                $dayModel = $pm->find($pm->id)->day()->save($value);
-                $dayModel->detail()->saveAll($totalDetail[$key]);
+                $dayModel = $pm->find($pm->id)->day()->allowField(true)->save($value);
+                $dayModel->detail()->allowField(true)->saveAll($totalDetail[$key]);
                 unset($dayModel);
             }
         });
