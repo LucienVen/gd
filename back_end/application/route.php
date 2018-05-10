@@ -27,6 +27,7 @@ Route::group('v1',function (){
     Route::delete('auth', 'user/Auth/logout');
     Route::resource('user','user/User');
     Route::resource('plan', 'pathplan/Pathplan');
+    Route::get('hotel', 'hotel/Hotel/index');
     Route::resource('destination', 'destination/Destination');
     Route::group('destination', function () {
         Route::get('/types', 'destination/DestinationTypes/index');
