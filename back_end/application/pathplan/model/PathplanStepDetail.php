@@ -6,4 +6,5 @@ use think\Model;
 
 class PathplanStepDetail extends Model
 {
+    protected $readonly = ['id'];
 }
