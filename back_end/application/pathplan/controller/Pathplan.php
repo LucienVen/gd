@@ -135,6 +135,7 @@ class Pathplan extends Base
         $pathplan = $data;
         $pathplan['uid'] = parent::$app['auth']->token['uid'];
         unset($pathplan['day']);
+        unset($pathplan['id']);
 
         //  验证
         if (!$planVa->check($pathplan)){
@@ -157,6 +158,7 @@ class Pathplan extends Base
             // 日程索引表数据
             $day[$key]['day_index'] = $key+1;
             unset($day[$key]['detail']);
+            unset($day[$key]['id']);
 
             foreach ($det as $k => $detail) {
                 if (!$planDetVa->check($detail)) {
@@ -164,6 +166,7 @@ class Pathplan extends Base
                 }
                 // 路程详情表数据
                 $det[$k]['index'] = $k+1;
+                unset($det[$k]['id']);
             }
             $totalDetail[$key] = $det;
         }
