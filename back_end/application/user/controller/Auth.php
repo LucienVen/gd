@@ -46,6 +46,8 @@ class Auth extends Base
                     unset($userData['password']);
                     return $this->sendSuccess($userData, 'login success!');
                 }
+            } else {
+                return $this->sendError(400, "password error!", 400);
             }
         }
         return $this->sendError(400, "user don't exist!", 400);
