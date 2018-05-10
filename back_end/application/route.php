@@ -32,7 +32,7 @@ Route::group('v1',function (){
         Route::get('/types', 'destination/DestinationTypes/index');
         Route::get('/heatmap', 'destination/Destination/heatMap');
     });
-    Route::post('design', 'plan/Design');
+    Route::post('design', 'other/Design/index');
     Route::post('train', 'other/Ticket/train');
 });
 

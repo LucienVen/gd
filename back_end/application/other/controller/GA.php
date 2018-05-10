@@ -15,21 +15,75 @@ use NumPHP\LinAlg\LinAlg;
 
 class GA
 {
-    const MAXAGE = 300;
-    const POP_SIZE = 250;
+    /**
+     * 迭代次数
+     */
+    const MAXAGE = 50;
+    /**
+     * 种群大小
+     */
+    const POP_SIZE = 30;
+    /**
+     * 交叉算子
+     */
     const PC = 0.9;
+    /**
+     * 遗传算子
+     */
     const PM = 0.05;
+    /**
+     * 种群代沟
+     */
     const GGAP = 0.9;
 
+    /**
+     * 位置向量
+     *
+     * @var Array
+     */
     private $position;
+    /**
+     * 距离矩阵
+     *
+     * @var Array
+     */
     private $distance;
+    /**
+     * 总节点数
+     *
+     * @var Int
+     */
     private $pointNum;
 
+    /**
+     * 父代
+     *
+     * @var Array
+     */
     private $parent;
-    private $child;
+    /**
+     * 被选中的个体
+     *
+     * @var Array
+     */
     private $selIndv;
+    /**
+     * 种群中每个个体距离和
+     *
+     * @var Array
+     */
     private $popDistance;
+    /**
+     * 种群中每个个体的适应度
+     *
+     * @var Array
+     */
     private $popFitness;
+    /**
+     * 种群中的最优个体
+     *
+     * @var [type]
+     */
     private $bestIndv;
 
     public function __construct(Array $p)
@@ -71,7 +125,7 @@ class GA
      */
     private function calcuDistance($aDes, $bDes)
     {
-        return sqrt(pow($aDes[0]-$bDes[0], 2)+pow($aDes[1]-$bDes[1], 2));
+        return sqrt(pow((float)$aDes[0]-(float)$bDes[0], 2)+pow((float)$aDes[1]-(float)$bDes[1], 2));
     }
 
     /**
@@ -94,6 +148,7 @@ class GA
      */
     public function fitness()
     {
+        // var_dump($this->popDistance);
         for ($i=0; $i < self::POP_SIZE; $i++) {
             $this->popFitness[$i] = 1/$this->popDistance[$i];
         }
@@ -108,27 +163,23 @@ class GA
     {
         for ($i=0; $i < self::POP_SIZE; $i++) {
             $this->popDistance[$i] = $this->indvDistance($this->parent[$i]);
+            if ($this->popDistance[$i] == 0) var_dump($this->parent[$i]);
         }
     }
 
     /**
      * 计算个体的路程
      *
-     * @return void
+     * @return float
      */
     public function indvDistance($indv)
     {
-        // for ($i=0; $i < self::POP_SIZE; $i++) {
-            $tmp = 0;
-            for ($j=0; $j < $this->pointNum; $j++) {
-                // $indv1 = $this->parent[$i][$j];
-                // $indv2 = $this->parent[$i][$j+1];
-                $m = $j==$this->pointNum-1?0:$j+1;
-                $tmp += $this->distance[$indv[$j]-1][$indv[$m]-1];
-            }
-            // $this->popDistance[$i] = $tmp;
-            return $tmp;
-        // }
+        $tmp = 0;
+        for ($k=0; $k < $this->pointNum; $k++) {
+            $m = $k==$this->pointNum-1?0:$k+1;
+            $tmp += $this->distance[$indv[$k]-1][$indv[$m]-1];
+        }
+        return $tmp;
     }
 
     public function select()
@@ -237,13 +288,14 @@ class GA
     {
         $selNum = count($this->selIndv);
         for ($i=0; $i < $selNum; $i++) {
+            $tmp = [];
             $back = $this->indvDistance($this->selIndv[$i]);
             $r1 = rand(0,$this->pointNum-1);
             $r2 = rand(0,$this->pointNum-1);
             $m1 = max($r1,$r2);
             $m2 = min($r1,$r2);
             for ($j=$m1,$k=$m2; $j >= $m2; $k++,$j--) {
-                $tmp[$k] = $this->selIndv[$j];
+                $tmp[$k] = $this->selIndv[$i][$j];
             }
             $i1 = $tmp+$this->selIndv[$i];
             $after = $this->indvDistance($i1);
@@ -261,11 +313,40 @@ class GA
     public function reins()
     {
         $selNum = count($this->selIndv);
-        asort($this->popDistance);
-        $bestInParent = array_keys($this->popDistance);
+        $tmp = $this->popDistance;
+        asort($tmp);
+        $bestInParent = array_keys($tmp);
         for ($i=0,$j=$selNum; $i < self::POP_SIZE-$selNum; $i++,$j++) {
             $this->selIndv[$j] = $this->parent[$bestInParent[$i]];
         }
         $this->parent = $this->selIndv;
+    }
+
+    public function getBest()
+    {
+        asort($this->popDistance);
+        list($n) = array_keys($this->popDistance);
+        $value = array($n=>$this->popDistance[$n]);
+        var_dump($this->parent[$n]);
+        foreach ($this->parent[$n] as $index => $point) {
+            $t = $index+1==$this->pointNum?0:$index+1;
+            var_dump($index);
+            $path[$index]['start'] = implode(',', $this->position[$point-1]);
+            $path[$index]['end'] = implode(',', $this->position[$this->parent[$n][$t]-1]);
+            $path[$index]['start_des'] = $point-1;
+            $path[$index]['end_des'] = $this->parent[$n][$t]-1;
+            $path[$index]['distance'] = $this->distance[$point-1][$this->parent[$n][$t]-1];
+        }
+        ksort($path);
+        $res['realpath'] = $this->parent[$n];
+        $res['path'] = $path;
+        $res['distance'] = $this->popDistance[$n];
+
+        return $res;
+    }
+
+    public function getPop()
+    {
+        return $this->parent;
     }
 }
