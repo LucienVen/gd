@@ -25,6 +25,7 @@ class Destination extends Base
      * @var array
      */
     private $join = [['destination_detail desd', 'desd.des_id=des.id']];
+    private $order = ['asc', 'desc'];
 
     /**
      * 获取热门景点概览信息
@@ -52,15 +53,17 @@ class Destination extends Base
             // 分页信息
             $page = !isset($param['page'])?Config::get('condition.page'):$param['page'];
             $perpage = !isset($param['perpage'])?Config::get('condition.per_page'):$param['perpage'];
+            $order = !isset($param['order'])?Config::get('condition.order'):$param['order'];
             // 查询字段
             $field = [
                 'des.id','des.name','des.comments','cover_url','impression',
-                'desd.description','desd.location','desd.cost_time',
+                'desd.score','desd.location','desd.cost_time',
                 'desd.cost_max_time','desd.open_time','desd.ticket_msg','desd.level','desd.rank'
             ];
             // 总数
             $num = $desModel->where(['city'=>$cid,'hot'=>1,'is_delete'=>0,'status'=>0])->count();
             $data = $desModel->where($condition)
+                            ->order(['score' => $this->order[$order], 'id' => 'asc'])
                             ->alias('des')
                             ->join($this->join)
                             ->page($page,$perpage)
