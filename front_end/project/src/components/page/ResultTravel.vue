@@ -1,5 +1,6 @@
 <template>
   <div id="resultTravel">
+
     <!-- <h1>{{msg}}</h1> -->
     <el-row :gutter="20" id="resTitle" class="resTitle">
       规划结果页
@@ -27,12 +28,15 @@
         <recommend-options></recommend-options>
       </el-col>
     </el-row>
-
+    <div>
+      <!-- {{storeTestPlanRes}} -->
+    </div>
   </div>
 </template>
 
 <script>
 // import axios from 'axios'
+import store from '@/components/store/store.js'
 import DataDec from './DataDec'
 import DayTravelDetail from './DayTravelDetail'
 import RecommendOptions from './RecommendOptions'
@@ -43,12 +47,19 @@ export default {
       heatMapData: []
     }
   },
+  computed: {
+    storeTestPlanRes() {
+      // this.$store.state.selectType
+      return this.$store.state.testPlanRes
+    }
+  },
   created() {},
   components: {
     'data-dec': DataDec,
     'day-travel-detail': DayTravelDetail,
     'recommend-options': RecommendOptions
-  }
+  },
+  store
 }
 </script>
 

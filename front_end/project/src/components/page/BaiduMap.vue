@@ -6,6 +6,9 @@
           <el-button type="">返回标准模式</el-button>
         </router-link> -->
         <div>
+          <router-link to="/plan/resultTravel">
+            <el-button type="">21312</el-button>
+          </router-link>
           <day-travel-detail></day-travel-detail>
         </div>
 
@@ -46,9 +49,9 @@ export default {
       position: pointA, // 指定文本标注所在的地理位置
       offset: new BMap.Size(20, 0) //设置文本偏移量
     }
-    
+
     marker2.setLabel(new BMap.Label('1', opts))
-    
+
     map.addOverlay(marker2)
     map.addOverlay(marker1)
     map.addOverlay(marker3)

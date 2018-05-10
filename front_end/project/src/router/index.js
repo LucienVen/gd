@@ -11,6 +11,8 @@ import BaiduMap from '@/components/page/BaiduMap'
 import Registered from '@/components/Registered'
 import Login from '@/components/Login'
 import About from '@/components/About'
+import Person from '@/components/Person'
+
 
 
 
@@ -38,6 +40,13 @@ export default new Router({
       name: 'About',
       component: About
     },
+    {
+      path: '/person',
+      name: 'Person',
+      component: Person
+
+    },
+
     {
       path: '/plan',
       name: 'Plan',
