@@ -123,9 +123,9 @@ class Design extends Base
                 'detail' => []
             ];
             if ($i == 0) {
-                $day[$i]['move_city'] = $this->startCity.','.$this->endCity;
+                $day[$i]['move_city'] = $this->startCity.'->'.$this->endCity;
             } elseif ($i == $res['cost_time']-1) {
-                $day[$i]['move_city'] = $this->endCity.','.$this->startCity;
+                $day[$i]['move_city'] = $this->endCity.'->'.$this->startCity;
             } else {
                 $day[$i]['move_city'] = $this->endCity;
             }
