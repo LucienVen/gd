@@ -26,25 +26,6 @@ class DestinationTypes extends Base
     private $order = ['asc', 'desc'];
 
     /**
-     * 初始化查询条件
-     *
-     * @param Array $param
-     * @return Array
-     */
-    private function initConf($param)
-    {
-        $condition = Config::get('condition');
-
-        foreach ($param as $key => $value) {
-            if (array_key_exists($key, $condition) && !is_null($value)) {
-                $condition[$key] = intval($value);
-            }
-        }
-
-        return $condition;
-    }
-
-    /**
      * Get全部景点类型
      *
      * @param Request $request
@@ -53,12 +34,12 @@ class DestinationTypes extends Base
     public function index(Request $request)
     {
         // 初始化
-        $cont = $this->initConf($request->get());
+        $cont = $request->get();
         $desModel = new DesModel;
 
-        $page = !isset($cont['page'])?Config::get('condition.page'):$cont['page'];
-        $perpage = !isset($cont['perpage'])?Config::get('condition.per_page'):$cont['perpage'];
-        $order = !isset($cont['order'])?Config::get('condition.order'):$cont['order'];
+        $page = !isset($cont['page'])?Config::get('condition.page'):(int)$cont['page'];
+        $perpage = !isset($cont['perpage'])?Config::get('condition.per_page'):(int)$cont['perpage'];
+        $order = !isset($cont['order'])?Config::get('condition.order'):(int)$cont['order'];
 
         $res = [];
         // 查询
