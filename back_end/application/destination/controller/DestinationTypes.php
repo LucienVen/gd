@@ -1,4 +1,13 @@
 <?php
+/**
+ * 景点类型类
+ * Feature: 查询景点类型信息
+ * Time:    2018-05-09 15:23:35
+ *
+ * @author Yven <yvenchang@163.com>
+ * @access public
+ * @todo
+**/
 
 namespace app\destination\controller;
 

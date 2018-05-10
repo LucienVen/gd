@@ -29,7 +29,7 @@ Route::group('v1',function (){
     Route::resource('plan', 'pathplan/Pathplan');
     Route::resource('destination', 'destination/Destination');
     Route::group('destination', function () {
-        Route::resource('/types', 'destination/DestinationTypes');
+        Route::get('/types', 'destination/DestinationTypes/index');
         Route::get('/heatmap', 'destination/Destination/heatMap');
     });
     Route::post('design', 'plan/Design');

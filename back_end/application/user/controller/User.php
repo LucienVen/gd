@@ -65,8 +65,10 @@ class User extends Base
         }
 
         //  插入
-        if (!$user->allowField(true)->save($data)) {
-            return $this->sendError(500, 'Create user fielded, try it again later.', 500);
+        try {
+            $user->allowField(true)->save($data);
+        } catch(\Exception $e) {
+            return $this->sendError($e->getCode(), $e->getMessage(), 500);
         }
 
         return $this->sendSuccess(['uid'=>$user->uid], 'Registration success!');
@@ -97,8 +99,10 @@ class User extends Base
         }
 
         // 更新
-        if (!$user->allowField(true)->save($data, ['uid' => $id])) {
-            return $this->sendError(500, 'Update user fielded, try it again later.', 500);
+        try {
+            $user->allowField(true)->save($data, ['uid' => $id]);
+        } catch(\Exception $e) {
+            return $this->sendError($e->getCode(), $e->getMessage(), 500);
         }
 
         return $this->sendSuccess($id, 'Update success!');

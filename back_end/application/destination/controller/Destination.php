@@ -1,4 +1,13 @@
 <?php
+/**
+ * 景点类
+ * Feature: 查询概要信息/查询详细信息/查询热力图
+ * Time:    2018-05-09 15:23:00
+ *
+ * @author Yven <yvenchang@163.com>
+ * @access public
+ * @todo
+**/
 
 namespace app\destination\controller;
 
