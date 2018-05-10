@@ -13,6 +13,7 @@ namespace app\destination\controller;
 
 use think\Request;
 use think\Config;
+use app\destination\model\Destination as DesModel;
 use app\destination\model\DestinationTypes as DesTypeModel;
 
 class DestinationTypes extends Base
@@ -52,22 +53,24 @@ class DestinationTypes extends Base
     public function index(Request $request)
     {
         // 初始化
-        $condition = $this->initConf($request->get());
-        $desTypeModel = new DesTypeModel;
+        $cont = $this->initConf($request->get());
+        $desModel = new DesModel;
 
+        $page = !isset($cont['page'])?Config::get('condition.page'):$cont['page'];
+        $perpage = !isset($cont['perpage'])?Config::get('condition.per_page'):$cont['perpage'];
+        $order = !isset($cont['order'])?Config::get('condition.order'):$cont['order'];
+
+        $res = [];
         // 查询
-        if (($data = $desTypeModel->where('id', '>=', ($condition['page']-1)*$condition['per_page']+1)
-                                ->limit($condition['per_page'])
-                                ->order('value', $this->order[$condition['order']])
-                                ->select())) {
-            // 数据项信息
-            $data['count'] = $desTypeModel->count();
-            $data['page'] = $condition['page'];
-            $data['per_page'] = $condition['per_page'];
+        $res['count'] = $desModel->where('comments', '>', 500)->count();
+        // 数据项信息
+        $res['page'] = $page;
+        $res['per_page'] = $perpage;
+        $res['data'] = $desModel->where('d.comments', '>', 500)->alias('d')
+                        ->page($page, $perpage)->order('d.comments', $order)
+                        ->join('DestinationTypes dt', 'd.type_id=dt.id')
+                        ->field('d.type_id,d.comments,dt.name')->select();
 
-            return $this->sendSuccess($data);
-        }
-
-        return $this->sendError(400, 'User dont exsit!', 400);
+        return $this->sendSuccess($res);
     }
 }
