@@ -17,27 +17,114 @@ use app\destination\model\Destination as DesModel;
 
 class Design extends Base
 {
+    /**
+     * 遗传算法计算对象
+     *
+     * @var GA
+     */
     private $ga;
+
+    /**
+     * 起始终止时间
+     *
+     * @var String
+     */
     private $goOff;
+
+    /**
+     * 总计游玩天数
+     *
+     * @var Int
+     */
+    private $total;
+
+    /**
+     * 到达时间
+     *
+     * @var String
+     */
     private $arrival;
+
+    /**
+     * 游玩时间类型选择
+     *
+     * @var Int
+     */
     private $playTimeSel;
+
+    /**
+     * 游玩时间类型大小
+     *
+     * @var array
+     */
     private $timeType = [6, 11];
+
+    /**
+     * 选择规划点集合
+     *
+     * @var Array
+     */
     private $point;
+
+    /**
+     * 选择规划点坐标集合
+     *
+     * @var Array
+     */
     private $position;
+
+    /**
+     * 城市点与景点id映射
+     *
+     * @var Array
+     */
     private $mapping;
+
+    /**
+     * 起始点名称
+     *
+     * @var String
+     */
     private $startCity;
+
+    /**
+     * 目标点名称
+     *
+     * @var String
+     */
     private $endCity;
 
+    /**
+     * 时间格式匹配
+     *
+     * @var String
+     */
+    private $timePregMatch = '(20\d{2})-([0|1]\d)-([0|1|2|3]\d)';
+
+    /**
+     * 景点模型对象
+     *
+     * @var DesModel
+     */
+    private $desModel;
+    private $desTypeModel;
+
+    /**
+     * 规划接口入口
+     *
+     * @param Request $request
+     * @return Json
+     */
     public function index(Request $request)
     {
-        $p = $this->dataProcessing($request->post());
-        // var_dump($p);
-        foreach ($p as $value) {
-            $this->position[$value['id']] = explode(',', $value['position']);
-            $this->point[$value['id']] = $value;
+        $this->desModel = new DesModel;
+        $this->desTypeModel = new DesTypeModel;
+
+        if (!$this->dataProcessing($request->post())) {
+            return $this->sendError(400, "Data Error!");
         }
+
         $this->mapping = array_keys($this->position);
-        // var_dump($position);
         $this->ga = new GA(array_values($this->position));
         for ($i=0; $i < $this->ga::MAXAGE; $i++) {
             $this->ga->popDistance();
@@ -49,59 +136,113 @@ class Design extends Base
             $this->ga->reins();
         }
         return $this->sendSuccess($this->dateReturn($this->ga->getBest()));
-        // return $this->sendSuccess($this->ga->getBest());
     }
 
     private function dataProcessing($data)
     {
-        $pointData = [];
-        $desModel = new DesModel;
-        $desTypeModel = new DesTypeModel;
 
-        if (!isset($data['go_off']) || !isset($data['arrival']) || !isset($data['play_time']) || !isset($data['type_id']) || !isset($data['start_city']) || !isset($data['end_city'])) {
-            return $this->sendError(400, "data error", 400);
+        if (!isset($data['go_off']) ||
+            0 == preg_match('/'.$this->timePregMatch.','.$this->timePregMatch.'/', $data['go_off']) ||
+            !isset($data['arrival']) ||
+            // 0 == preg_match('/'.$this->timePregMatch.'[0|1|2]\d:[0|1|2|3|4|5]\d'.'/', $data['arrival']) ||
+            !isset($data['play_time']) ||
+            !isset($data['type_id']) ||
+            !isset($data['start_city']) ||
+            !isset($data['end_city'])) {
+            return false;
         }
 
-        $this->goOff = $data['go_off'];
         $this->arrival = $data['arrival'];
-        $this->playTimeSel = $data['play_time']-1;
+        $this->playTimeSel = $data['play_time'];
         $this->startCity = $data['start_city'];
         $this->endCity = $data['end_city'];
+        $this->goOff = explode(',', $data['go_off']);
+        $this->total = idate('z', strtotime($this->goOff[1]))-idate('z', strtotime($this->goOff[0]))+1;
 
         if (is_string($data['type_id'])) {
             $type = explode(',', $data['type_id']);
         } elseif (is_array($data['type_id'])) {
             $type = $data['type_id'];
         } else {
-            return $this->sendError(400, "data type error!", 400);
+            return false;
         }
 
+        $point = $this->selPoint($type);
+
+        foreach ($point as $value) {
+            $this->position[$value['id']] = explode(',', $value['position']);
+            $this->point[$value['id']] = $value;
+        }
+
+        return true;
+    }
+
+    private function selPoint($type)
+    {
+        $pointData = [];
+
         foreach ($type as $value) {
-            if (($pid = $desTypeModel->where('id', $value)->value('pid')) != 0) {
-                $orCon = ['ds.id', $pid];
+            if (($pid = $this->desTypeModel->where('id', $value)->value('pid')) != 0) {
+                $orCon = ['ds.id' => $pid];
             } else {
                 $orCon = [];
             }
             $pointData = array_merge($pointData,
-                $desModel->where('ds.id', $value)->whereOr($orCon)->alias('ds')
+                $this->desModel->where('ds.id', $value)->whereOr($orCon)->alias('ds')
                 ->join('destination_detail dd', 'dd.des_id=ds.id')
-                ->field('ds.id,dd.position,dd.cost_time,dd.cost_max_time')
-                ->select()
+                ->order('dd.score desc')
+                ->field('ds.id,dd.position,dd.cost_time,dd.cost_max_time')->select()
             );
         }
 
         return $pointData;
     }
 
+    private function addPoint(&$point)
+    {
+        $optionData = $this->desModel->join('destination_detail dd', 'dd.des_id=ds.id')
+            ->order('desc dd.score')
+            ->field('ds.id,dd.position,dd.cost_time,dd.cost_max_time')
+            ->limit(10)->select();
+        while (count($point) < $total) {
+            array_push($point);
+        }
+        if ($this->calcTime($point)/$total > $this->timeType[$this->playTimeSel]) {
+        }
+    }
+
+    private function calcTime($point)
+    {
+        $totalTime = 0;
+        // if ($value['cost_time'] >= $this->timeType[$this->playTimeSel]) {
+        // }
+        foreach ($point as $key => $value) {
+            if ($value['cost_time'] >= 24) {
+                $value['cost_time'] = 0;
+            }
+            if ($this->playTimeSel) {
+                $totalTime += $value['cost_time'];
+            } else {
+                $totalTime += $value['cost_max_time']==0?$value['cost_time']:$value['cost_max_time'];
+            }
+        }
+
+        return $totalTime;
+    }
+
+    private function timePlan()
+    {
+    }
+
     private function dateReturn($data)
     {
-        $time = explode(',', $this->goOff);
-        $tstart = idate('z', strtotime($time[0]));
-        $tend = idate('z', strtotime($time[1]));
+        // $time = explode(',', $this->goOff);
+        // $tstart = idate('z', strtotime($time[0]));
+        // $tend = idate('z', strtotime($time[1]));
 
         $res = [
-            'go_off' => $time[0],
-            'cost_time' => $tend-$tstart+1
+            'go_off' => $this->goOff[0],
+            'cost_time' => $this->total
         ];
 
         $idx = floor(count($data['realpath'])/$res['cost_time']);
@@ -144,29 +285,5 @@ class Design extends Base
         $res['day'] = $day;
 
         return $res;
-
-        // $dayCost = $data['realpath'][0];
-
-        // foreach ($data['realpath'] as $key => $value) {
-        //     if ($key == 0) continue;
-
-        //     $nowNodeTime = $this->point[$value]['cost_time'];
-
-        //     // TODO
-        //     if ($nowNodeTime >= 24.00) {
-        //         $nowNodeTime = 0;
-        //     }
-
-        //     if ($this->playTimeSel) {
-        //         $dayCost[$key] = $nowNodeTime + $dayCost[$key-1];
-        //     } else {
-        //         $dayCost[$key] = ($nowNode['cost_max_time']==0?$nowNodeTime:$nowNode['cost_max_time']) + $dayCost[$key-1];
-        //     }
-        // }
-
-        // do{
-        //     $per = ceil(array_pop($dayCost)/$res['cost_time']);
-        // }while($per > $this->timeType[$this->playTimeSel]);
-        // count($data['realpath']) - count($dayCost)+1;
     }
 }

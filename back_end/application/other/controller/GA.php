@@ -327,10 +327,10 @@ class GA
         asort($this->popDistance);
         list($n) = array_keys($this->popDistance);
         $value = array($n=>$this->popDistance[$n]);
-        var_dump($this->parent[$n]);
+        // var_dump($this->parent[$n]);
         foreach ($this->parent[$n] as $index => $point) {
             $t = $index+1==$this->pointNum?0:$index+1;
-            var_dump($index);
+            // var_dump($index);
             $path[$index]['start'] = implode(',', $this->position[$point-1]);
             $path[$index]['end'] = implode(',', $this->position[$this->parent[$n][$t]-1]);
             $path[$index]['start_des'] = $point-1;
