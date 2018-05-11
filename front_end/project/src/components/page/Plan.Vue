@@ -208,11 +208,11 @@
             </div>
 
             <!-- 当票务查询为true是 -->
-            <div style="padding-top:12px" v-if="ticketingInquiry">
+            <!-- <div style="padding-top:12px" v-if="ticketingInquiry">
               <span>选择列车：</span>
               {{storeSelectTrainSchedule}}
               <hr/>
-            </div>
+            </div> -->
             <div style="padding-top:12px">
               <span>行程宽松度：</span>
               {{storeSelectTravelComfort}}
@@ -259,7 +259,7 @@ export default {
 
       // 选择行数
       currentRow: '',
-      activeName: '4',
+      activeName: '1',
       cityData: [
         {
           value: 'xiamen',
@@ -431,7 +431,7 @@ export default {
       let that = this
       axios({
         method: 'post',
-        url: 'http://localhost:8089/gd/back_end/public/index.php/v1/design',
+        url: this.GLOBAL.apiurl+'design',
         data: {
           type_id: type_id,
           // type_id: '1,2,5,6,7,8,9,10,11,12',
@@ -475,7 +475,7 @@ export default {
       let that = this
       axios
         .get(
-          'http://localhost:8089/gd/back_end/public/index.php/v1/destination/types?page=1&perpage=20&order=0'
+          this.GLOBAL.apiurl+'destination/types?page=1&perpage=20&order=0'
         )
         .then(function(response) {
           // console.log(response.data.data.data)
@@ -500,7 +500,7 @@ export default {
       var that = this
       axios({
         method: 'post',
-        url: 'http://localhost:8089/gd/back_end/public/index.php/v1/train',
+        url: this.GLOBAL.apiurl+'train',
         data: {
           start: start,
           end: end,
@@ -574,13 +574,13 @@ export default {
       let that = this
       axios({
         method: 'get',
-        url: 'http://localhost:8089/gd/back_end/public/index.php/v1/plan/8',
+        url: this.GLOBAL.apiurl+'plan/8',
         withCredentials: true
       }).then(function(response) {
         // that.testTravelData = response.data.data
         // that.$store.
         that.$store.commit('storeTestPlanRes', response.data.data)
-        alert('ojbk！')
+        // alert('ojbk！')
 
         // window.location.href='http://localhost:8080'
       })
@@ -646,7 +646,7 @@ export default {
       this.$store.commit('storeTrainSchedule', val)
 
       this.currentRow = val
-      this.notice('ojbk', '3', 'success')
+      // this.notice('ojbk', '3', 'success')
       //   return $store.commit('storeTrainSchedule', val)
     },
     // 取消列车行选择

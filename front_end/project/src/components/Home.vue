@@ -22,7 +22,7 @@
             </router-link>
         </el-row>
 
-        <el-row :gutter="20" justify="center">
+        <el-row :gutter="20" justify="center" v-if="false">
             <div class="block">
                 <p style="line-height:10px; padding-top:20px;">景区热度分布</p>
                 <el-carousel trigger="click" height="600px" interval="5000">

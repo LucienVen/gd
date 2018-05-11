@@ -12,6 +12,10 @@ import ECharts from 'vue-echarts/components/ECharts.vue';
 import App from './App'
 import router from './router'
 
+import global_ from './components/Global' //引用文件
+
+Vue.prototype.GLOBAL = global_ //挂载到Vue实例上面
+
 
 
 Vue.config.productionTip = false

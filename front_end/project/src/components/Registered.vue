@@ -112,7 +112,7 @@ export default {
           // params.append('password_confirm', this.show['password_confirm'])
           axios({
             method: 'post',
-            url: 'http://localhost:8089/gd/back_end/public/index.php/v1/user',
+            url: this.GLOBAL.apiurl+'user',
             data: {
               email: that.show['email'],
               password: that.show['pass'],

@@ -247,7 +247,7 @@ export default {
       axios({
         method: 'get',
         url:
-          'http://localhost:8089/gd/back_end/public/index.php/v1/destination/' +
+          this.GLOBAL.apiurl+'destination/' +
           v_id,
 
         withCredentials: true
@@ -263,7 +263,7 @@ export default {
     //   axios({
     //     method: 'get',
     //     url:
-    //       'http://localhost:8089/gd/back_end/public/index.php/v1/destination?hot=1&city=厦门',
+    //       this.GLOBAL.apiurl+'destination?hot=1&city=厦门',
     //     withCredentials: true
     //   }).then(function(response) {
     //     $store.commit('storeAllViewpointList', response.data.data['data'])

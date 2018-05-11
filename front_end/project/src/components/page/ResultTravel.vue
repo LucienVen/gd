@@ -1,6 +1,6 @@
 <template>
   <div id="resultTravel" v-loading="" element-loading-text="拼命加载中">
-    
+
     <!-- <h1>{{msg}}</h1> -->
     <el-row :gutter="20" id="resTitle" class="resTitle">
       规划结果页
@@ -10,9 +10,22 @@
           <el-button class="test" icon="el-icon-location-outline">地图模式</el-button>
         </router-link>
 
-        <el-button type="" style="" @click="savePlan">保存规划</el-button>
+        <el-button @click="dialogFormVisible=true">保存规划</el-button>
         <el-button type="" style="float:right;margin-right:10px;" @click="refresh">刷新</el-button>
       </el-button-group>
+
+      <el-dialog title="保存规划" :visible.sync="dialogFormVisible">
+        <el-input v-model="planName" :placeholder="规划名称" style="margin:5px;">
+          <template slot="prepend">请输入规划名称</template>
+        </el-input>
+        <el-input v-model="planDec" :placeholder="规划简介" style="margin:5px;">
+          <template slot="prepend">请输入规划简介</template>
+        </el-input>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="dialogFormVisible=false;storePlanRes()">确 定</el-button>
+        </div>
+      </el-dialog>
 
     </el-row>
     <el-row :gutter="20">
@@ -50,8 +63,11 @@ export default {
       msg: 'Hello, World!',
       heatMapData: [],
       loading: true,
-      test: ''
+      test: '',
 
+      dialogFormVisible: false,
+      planName: '',
+      planDec: ''
     }
   },
   computed: {
@@ -59,17 +75,41 @@ export default {
       // this.$store.state.selectType
       this.test = this.$store.state.testPlanRes
     },
-    storePlanLoading(){
+    storePlanLoading() {
       // alert(this.$store.state.planLoading)
       return this.$store.state.planLoading
     }
   },
-  watch:{
-    test: function(newloading, oldloading){
+  watch: {
+    test: function(newloading, oldloading) {
       this.loading = false
     }
   },
   methods: {
+    // test
+    hello(m, n) {
+      alert(m)
+      alert(n)
+    },
+
+    storePlanRes() {
+      let data = this.$store.state.testPlanRes
+      data['name'] = this.planName
+      data['description'] = this.planDec
+
+      let that = this
+      axios({
+        method: 'post',
+        url: this.GLOBAL.apiurl + 'plan',
+        data: data,
+        withCredentials: true
+      }).then(function(response) {
+        alert('保存成功!')
+      })
+      // alert('ojbk')
+      // console.log(data)
+    },
+
     // 发起路线规划请求
     design() {
       let start_city = this.$store.state.beginCity[1].substr(0, 2)
@@ -97,7 +137,7 @@ export default {
       let that = this
       axios({
         method: 'post',
-        url: 'http://localhost:8089/gd/back_end/public/index.php/v1/design',
+        url: this.GLOBAL.apiurl + 'design',
         data: {
           type_id: type_id,
           // type_id: '1,2,5,6,7,8,9,10,11,12',
@@ -120,7 +160,7 @@ export default {
           message: '路线规划成功！',
           type: 'success'
         })
-        
+
         // console.log(response.data)
       })
     },
@@ -128,21 +168,21 @@ export default {
     refresh() {
       this.reload()
     },
-    savePlan() {
-      let data = this.$store.state.testPlanRes
-      // alert(data.data['id'])
+    // savePlan() {
+    //   let data = this.$store.state.testPlanRes
+    //   // alert(data.data['id'])
 
-      // console.log(data)
-      let that = this
-      axios({
-        method: 'post',
-        url: 'http://localhost:8089/gd/back_end/public/index.php/v1/plan',
-        data: data,
-        withCredentials: true
-      }).then(function(response) {
-        alert('ojbk22222!')
-      })
-    }
+    //   // console.log(data)
+    //   let that = this
+    //   axios({
+    //     method: 'post',
+    //     url: this.GLOBAL.apiurl + 'plan',
+    //     data: data,
+    //     withCredentials: true
+    //   }).then(function(response) {
+    //     alert('ojbk22222!')
+    //   })
+    // }
   },
   mounted() {
     this.loading = true

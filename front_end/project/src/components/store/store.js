@@ -267,7 +267,7 @@ const getters = {
 //   getHeatMapDate({commit}){
 //     axios
 //       .get(
-//         'http://localhost:8089/gd/back_end/public/index.php/v1/destination/heatmap'
+//         this.GLOBAL.apiurl+'destination/heatmap'
 //       )
 //       .then(response => {
 //         console.log(response.data.data);

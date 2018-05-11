@@ -71,7 +71,7 @@ export default {
           // this.ruleLogin
           // axios
           //   .post(
-          //     'http://localhost:8089/gd/back_end/public/index.php/v1/auth',
+          //     this.GLOBAL.apiurl+'auth',
           //     querystring.stringify({
           //       email: this.ruleLogin.email,
           //       password: this.ruleLogin.pass
@@ -80,7 +80,7 @@ export default {
           let that = this
           axios({
             method: 'post',
-            url: 'http://localhost:8089/gd/back_end/public/index.php/v1/auth',
+            url: this.GLOBAL.apiurl+'auth',
             data: {
               email: that.ruleLogin.email,
               password: that.ruleLogin.pass

@@ -68,7 +68,7 @@ export default {
     console.log(that.username)
 
     axios
-      .get('http://localhost:8089/gd/back_end/public/index.php/v1/user')
+      .get(this.GLOBAL.apiurl+'user')
       .then(function(response) {
         // 更新store
         that.username = response.data.data.username
@@ -89,7 +89,7 @@ export default {
       let that = this
       axios({
         method: 'delete',
-        url: 'http://localhost:8089/gd/back_end/public/index.php/v1/auth',
+        url: this.GLOBAL.apiurl+'auth',
         withCredentials: true
       }).then(function(response) {
         // 更新store？

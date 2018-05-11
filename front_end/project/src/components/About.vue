@@ -55,7 +55,7 @@ export default {
       let that = this
       axios({
         method: 'get',
-        url: 'http://localhost:8089/gd/back_end/public/index.php/v1/plan/1',
+        url: this.GLOBAL.apiurl+'plan/1',
         withCredentials: true
       }).then(function(response) {
         // that.testTravelData = response.data.data
@@ -70,7 +70,7 @@ export default {
       let that = this
       axios({
         method: 'get',
-        url: 'http://localhost:8089/gd/back_end/public/index.php/v1/destination?hot=1&city=厦门',
+        url: this.GLOBAL.apiurl+'destination?hot=1&city=厦门',
         withCredentials: true
       }).then(function(response) {
         // that.testTravelData = response.data.data

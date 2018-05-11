@@ -21,7 +21,7 @@
 
       <el-dialog title="修改用户名" :visible.sync="dialogFormVisible">
 
-        <el-input v-model="newUserName" :placeholder={getStoreUserName}>
+        <el-input v-model="newUserName" :placeholder="{getStoreUserName}">
           <template slot="prepend">请输入新用户名：</template>
         </el-input>
         <div slot="footer" class="dialog-footer">
@@ -51,7 +51,7 @@
           <el-table-column fixed="right" label="操作" width="150">
             <template slot-scope="scope">
               <router-link to="/plan/resultTravel">
-                <el-button @click="hello(scope.row);getPlanRes(scope.row)" type="" size="small">查看</el-button>
+                <el-button @click="getPlanRes(scope.row)" type="" size="small">查看</el-button>
               </router-link>
               <el-button @click="delUserPlan(scope.row.id)" type="danger" size="mini">删除</el-button>
             </template>
@@ -114,7 +114,7 @@ export default {
       axios({
         method: 'put',
         url:
-          'http://localhost:8089/gd/back_end/public/index.php/v1/user/' + uid,
+          this.GLOBAL.apiurl+'user/' + uid,
         data: { username: that.newUserName },
         withCredentials: true
       })
@@ -138,7 +138,7 @@ export default {
       axios({
         method: 'delete',
         url:
-          'http://localhost:8089/gd/back_end/public/index.php/v1/plan/' + p_id,
+          this.GLOBAL.apiurl+'plan/' + p_id,
         withCredentials: true
       })
         .then(function(response) {
@@ -175,7 +175,7 @@ export default {
     getUserPlan() {
       let that = this
       axios
-        .get('http://localhost:8089/gd/back_end/public/index.php/v1/plan')
+        .get(this.GLOBAL.apiurl+'plan')
         .then(function(response) {
           // console.log(response.data.data)
           that.userPlanData = response.data.data.data
@@ -191,13 +191,18 @@ export default {
       axios({
         method: 'get',
         url:
-          'http://localhost:8089/gd/back_end/public/index.php/v1/plan/' +
+          this.GLOBAL.apiurl+'plan/' +
           index.id,
         withCredentials: true
       })
         .then(function(response) {
           that.$store.commit('storeTestPlanRes', response.data.data)
-          alert('ojbk！')
+          that.$message({
+            showClose: true,
+            message: '查看成功',
+            type: 'success'
+          })
+          // alert('获取成功！')
         })
         .catch(function(response) {
           alert('trouble!')

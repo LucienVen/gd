@@ -201,7 +201,7 @@ export default {
       axios({
         method: 'get',
         url:
-          'http://localhost:8089/gd/back_end/public/index.php/v1/destination?hot=1&city=厦门'
+          this.GLOBAL.apiurl+'destination?hot=1&city=厦门'
       })
         .then(function(response) {
           // alert('sdadas')
@@ -219,7 +219,7 @@ export default {
       axios({
         method: 'get',
         url:
-          'http://localhost:8089/gd/back_end/public/index.php/v1/hotel?type=0&position=24.527873,118.114686'
+          this.GLOBAL.apiurl+'hotel?type=0&position=24.527873,118.114686'
       })
         .then(function(response) {
           // alert('sdadas')
