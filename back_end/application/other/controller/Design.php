@@ -60,6 +60,13 @@ class Design extends Base
     private $timeType = [6, 11];
 
     /**
+     * 游玩时间类型大小最小值
+     *
+     * @var array
+     */
+    private $timeTypeMin = [4, 8];
+
+    /**
      * 选择规划点集合
      *
      * @var Array
@@ -201,21 +208,22 @@ class Design extends Base
     private function addPoint(&$point)
     {
         $optionData = $this->desModel->join('destination_detail dd', 'dd.des_id=ds.id')
-            ->order('desc dd.score')
+            ->order('dd.score desc')
             ->field('ds.id,dd.position,dd.cost_time,dd.cost_max_time')
             ->limit(10)->select();
         while (count($point) < $total) {
-            array_push($point);
+            array_push($point, array_shift($optionData));
         }
-        if ($this->calcTime($point)/$total > $this->timeType[$this->playTimeSel]) {
+        $pre = $this->calcTime($point)/$total;
+        if ($pre > $this->timeType[$this->playTimeSel]) {
+        } elseif ($pre == $total) {
+        } elseif ($pre < $this->timeTypeMin[$this->playTimeSel]) {
         }
     }
 
     private function calcTime($point)
     {
         $totalTime = 0;
-        // if ($value['cost_time'] >= $this->timeType[$this->playTimeSel]) {
-        // }
         foreach ($point as $key => $value) {
             if ($value['cost_time'] >= 24) {
                 $value['cost_time'] = 0;
@@ -236,10 +244,6 @@ class Design extends Base
 
     private function dateReturn($data)
     {
-        // $time = explode(',', $this->goOff);
-        // $tstart = idate('z', strtotime($time[0]));
-        // $tend = idate('z', strtotime($time[1]));
-
         $res = [
             'go_off' => $this->goOff[0],
             'cost_time' => $this->total
@@ -274,6 +278,8 @@ class Design extends Base
             foreach ($detail as $k => $v) {
                 $detail[$k]['start_des'] = $this->mapping[$v['start_des']];
                 $detail[$k]['end_des'] = $this->mapping[$v['end_des']];
+                $detail[$k]['start_name'] = $this->desModel->where(['id'=>$detail[$k]['start_des']])->value('name');
+                $detail[$k]['end_name'] = $this->desModel->where(['id'=>$detail[$k]['end_des']])->value('name');
             }
             $day[$i]['detail'] = $detail;
             $day[$i]['node'] = $rd[$i];
