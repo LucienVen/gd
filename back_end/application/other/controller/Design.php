@@ -216,9 +216,9 @@ class Design extends Base
         }
 
         $this->adjPoint($pointData);
-        foreach ($pointData as $key => $value) {
-            echo $key;var_dump($value->toArray());
-        }
+        // foreach ($pointData as $key => $value) {
+        //     echo $key;var_dump($value->toArray());
+        // }
 
         return $pointData;
     }
