@@ -37,37 +37,40 @@
         </el-tab-pane>
         <el-tab-pane label="酒店信息" name="second">
           <!-- 推荐酒店 -->
-          
-            <el-row :gutter="30" v-for="(item, index) in testRecommondHotel" style="margin: 20px 10px;">
-              <el-col :span="24">
-                <el-card :body-style="{ padding: '0px' }" shadow="hover" class="cardRecommond" @click.native="clickCard(item.id)">
-                  <el-row>
-                    <el-col :span="12">
-                      <img :src="item.small_photo_link" alt="" style="width:230px;">
-                    </el-col>
-                    <el-col :span="12" style="color:#636363" class="cardViewDetail">
-                      <div class="cardViewTitle">{{item.hotel_name}}</div>
-                      <div class="cardViewShowSmall">{{item.address}}</div>
-                      <div>
-                        <el-rate v-model="item.score" disabled text-color="#ff9900" score-template="item.score">
-                        </el-rate>
-                      </div>
-                      <!-- 离你的距离 -->
-                      <div class="cardViewShowSmall">距离：{{item.distance_from_you.toFixed(2)}}KM</div>
-                      <!-- <span v-for="tap in item.impression" style="float:right;">
-                      <el-tag style="margin-left: 5px;" type="info" size="mini">{{tap}}</el-tag>
-                    </span> -->
-                    </el-col>
-                  </el-row>
-                </el-card>
 
-              </el-col>
+          <el-row :gutter="30" v-for="(item, index) in testRecommondHotel" style="margin: 20px 10px;">
+            <el-col :span="24">
+              <el-card :body-style="{ padding: '0px' }" shadow="hover" class="cardRecommond" @click.native="clickCard(item.id)">
+                <el-row>
+                  <el-col :span="12">
+                    <img :src="item.small_photo_link" alt="" style="width:230px;">
+                  </el-col>
+                  <el-col :span="12" style="color:#636363" class="cardViewDetail">
+                    <div class="cardViewTitle">{{item.hotel_name}}</div>
+                    <div class="cardViewShowSmall">{{item.address}}</div>
+                    <div>
+                      <el-rate v-model="item.score" disabled text-color="#ff9900" score-template="item.score">
+                      </el-rate>
+                    </div>
+                    <!-- 离你的距离 -->
+                    <div class="cardViewShowSmall">距离：{{item.distance_from_you.toFixed(2)}}KM</div>
+                    <div>
+                      <span v-for="tap in item.impression" v-if="item.impression != ''">
+                        <el-tag style="margin-left: 5px;" type="info" size="mini">{{tap}}</el-tag>
+                      </span>
+                    </div>
 
-            </el-row>
-          </el-tab-pane>
-          <el-tab-pane label="天气信息" name="third">
+                  </el-col>
+                </el-row>
+              </el-card>
+
+            </el-col>
+
+          </el-row>
+        </el-tab-pane>
+        <!-- <el-tab-pane label="天气信息" name="third">
             //TODO
-          </el-tab-pane>
+          </el-tab-pane> -->
 
       </el-tabs>
     </el-card>
