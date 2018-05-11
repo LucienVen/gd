@@ -10,7 +10,7 @@ class PathplanStepDay extends Validate
         'day_distance' => 'require|max:32|regex:[1-9]\d*\.\d+',
         'node' => 'require|number',
         'total_time' => 'number',
-        'move_city' => 'require|regex:.*,.*'
+        'move_city' => 'require|regex:.*->.*'
       ];
 
     // protected $scene = [];
