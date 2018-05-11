@@ -37,7 +37,7 @@
             </el-form-item>
           </el-form>
         </el-card>
-        <div>{{show}}</div>
+        <!-- <div>{{show}}</div> -->
       </el-col>
     </el-row>
 
@@ -114,15 +114,26 @@ export default {
             method: 'post',
             url: 'http://localhost:8089/gd/back_end/public/index.php/v1/user',
             data: {
-              'email': that.show['email'],
-              'password': that.show['pass'],
-              'password_confirm': that.show['checkPass']
+              email: that.show['email'],
+              password: that.show['pass'],
+              password_confirm: that.show['checkPass']
             },
             // data: params,
             withCredentials: true
           }).then(function(response) {
-            alert('注册成功！')
+            // alert('注册成功！')
+            that.$message({
+              showClose: true,
+              message: '注册成功！',
+              type: 'success'
+            })
             window.location.href = 'http://localhost:8080/#/login'
+          }).catch(function(error){
+            that.$message({
+              showClose: true,
+              message: error.response.data.message,
+              type: 'error'
+            })
           })
           // alert('submit!')
         } else {

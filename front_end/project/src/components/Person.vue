@@ -1,6 +1,9 @@
 <template>
+
   <div id="personal">
+
     <!-- <h1>{{ msg }}</h1> -->
+    <!-- <h1>{{getStoreUid}}</h1> -->
     <el-row :gutter="20" style="margin-top:50px;">
       <el-col :span="4" :offset="4">
         <span style="text-align:right">
@@ -50,15 +53,17 @@
               <router-link to="/plan/resultTravel">
                 <el-button @click="hello(scope.row);getPlanRes(scope.row)" type="" size="small">查看</el-button>
               </router-link>
-              <el-button @click="delUserPlan" type="danger" size="mini">删除</el-button>
+              <el-button @click="delUserPlan(scope.row.id)" type="danger" size="mini">删除</el-button>
             </template>
           </el-table-column>
 
         </el-table>
+
       </el-col>
     </el-row>
 
   </div>
+
 </template>
 
 <script>
@@ -78,12 +83,13 @@ export default {
   },
   computed: {
     countPlan() {
-      if (this.userPlanData.length == 0) {
-        return 0
-      } else {
-        return this.userPlanData.length + 1
-      }
+      // if (this.userPlanData.length == 0) {
+      //   return 0
+      // } else {
+      return this.userPlanData.length
+      // }
     },
+
     getStoreEmail() {
       return this.$store.state.email
     },
@@ -97,24 +103,75 @@ export default {
       alert(data.id)
       console.log(data.id)
     },
+    // 获取uid
+    getStoreUid() {
+      return this.$store.state.uid
+    },
     // 更改用户名
     updateUserName(data) {
-      this.$message({
-        showClose: true,
-        message: data,
-        type: 'success'
+      let uid = this.getStoreUid()
+      let that = this
+      axios({
+        method: 'put',
+        url:
+          'http://localhost:8089/gd/back_end/public/index.php/v1/user/' + uid,
+        data: { username: that.newUserName },
+        withCredentials: true
       })
+        .then(function(response) {
+          that.$store.commit('storeUserName', that.newUserName)
+
+          that.$message({
+            showClose: true,
+            message: '更改用户名成功！',
+            type: 'success'
+          })
+        })
+        .catch(function(response) {
+          alert('trouble!')
+        })
     },
     // 删除用户某次路径规划信息
-    delUserPlan() {
-      this.$message({
-        showClose: true,
-        message: '删除用户某次路径规划信息',
-        type: 'error'
+    delUserPlan(p_id) {
+      // http://localhost:8089/gd/back_end/public/index.php/v1/plan/1
+      let that = this
+      axios({
+        method: 'delete',
+        url:
+          'http://localhost:8089/gd/back_end/public/index.php/v1/plan/' + p_id,
+        withCredentials: true
       })
+        .then(function(response) {
+          that.$message({
+            showClose: true,
+            message: '删除规划成功!',
+            type: 'success'
+          })
+          that.reload()
+          // that.$root.reload()
+        })
+        .catch(function(response) {
+          that.$message({
+            showClose: true,
+            message: '删除不成功',
+            type: 'error'
+          })
+        })
+      // this.$root.reload()
+      
+
+
+      // this.$nextTick(function () {
+      //   console.log(this.$el.textContent)
+      // })
       // alert('删除用户信息')
     },
     // 获取user保存的所有路径规划信息
+
+    componentUpdated: function() {
+      this.delUserPlan()
+    },
+
     getUserPlan() {
       let that = this
       axios
@@ -139,11 +196,8 @@ export default {
         withCredentials: true
       })
         .then(function(response) {
-          // that.testTravelData = response.data.data
-          // that.$store.
           that.$store.commit('storeTestPlanRes', response.data.data)
           alert('ojbk！')
-          // window.location.href='http://localhost:8080'
         })
         .catch(function(response) {
           alert('trouble!')
@@ -153,6 +207,8 @@ export default {
   mounted() {
     this.getUserPlan()
   },
+  inject: ['reload'],
+
   store
 }
 </script>

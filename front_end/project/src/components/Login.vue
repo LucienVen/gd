@@ -1,6 +1,6 @@
 <template>
   <div id="login">
-    <h1>{{ msg }}</h1>
+    <!-- <h1>{{ msg }}</h1> -->
     <el-row type="flex" class="row-bg" justify="center">
       <el-col :span="10">
         <el-card class="box-card">
@@ -39,6 +39,7 @@
 
 <script>
 import axios from 'axios'
+axios.defaults.withCredentials = true
 export default {
   data() {
     var validatePass = (rule, value, callback) => {
@@ -68,47 +69,48 @@ export default {
         const querystring = require('querystring')
         if (valid) {
           // this.ruleLogin
-          axios
-            .post(
-              'http://localhost:8089/gd/back_end/public/index.php/v1/auth',
-              querystring.stringify({
-                'email': this.ruleLogin.email,
-                'password': this.ruleLogin.pass
-              })
-              // {
-              //   email: this.ruleLogin.email,
-              //   password: this.ruleLogin.pass
-              // },
-              // withCredentials:true
-            )
-            .then(function(response) {
-              // if(response.data.Error)
-              alert('登录成功！')
-              // this.$router.push('/')
-              
-              // this.$router
-              // router.go('/')
-              window.location.href = 'http://localhost:8080/'
-              console.log(response)
-            })
-            .catch(function(response) {
-              console.log(response)
-            })
-
           // axios
           //   .post(
           //     'http://localhost:8089/gd/back_end/public/index.php/v1/auth',
-          //     this.ruleLogin
+          //     querystring.stringify({
+          //       email: this.ruleLogin.email,
+          //       password: this.ruleLogin.pass
+          //     })
           //   )
-          //   .then(function(response) {
-          //     console.log(response)
-          //   })
-          //   .catch(function(error) {
-          //     console.log(error)
-          //   })
-
-          // })
-          alert(response)
+          let that = this
+          axios({
+            method: 'post',
+            url: 'http://localhost:8089/gd/back_end/public/index.php/v1/auth',
+            data: {
+              email: that.ruleLogin.email,
+              password: that.ruleLogin.pass
+            },
+            withCredentials: true
+          })
+            .then(function(response) {
+              
+              that.$message({
+                showClose: true,
+                message: '登录成功！',
+                type: 'success'
+              })
+              // console.log(response.data)
+              // alert('登录成功！')
+              
+              window.location.href = 'http://localhost:8080/'
+              // console.log(response)
+            })
+            .catch(function(error) {
+              // console.log(error.response.data.message)
+              // alert(response.data.message)
+              that.$message({
+                showClose: true,
+                message: error.response.data.message,
+                type: 'error'
+              })
+              
+            })
+          // alert(response)
         } else {
           console.log('error submit!!')
           return false

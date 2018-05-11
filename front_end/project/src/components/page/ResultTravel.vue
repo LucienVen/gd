@@ -1,5 +1,5 @@
 <template>
-  <div id="resultTravel">
+  <div id="resultTravel" v-loading="loading" element-loading-text="拼命加载中">
 
     <!-- <h1>{{msg}}</h1> -->
     <el-row :gutter="20" id="resTitle" class="resTitle">
@@ -10,6 +10,8 @@
           <el-button class="test" icon="el-icon-location-outline">地图模式</el-button>
         </router-link>
 
+        <el-button type="" style="" @click="savePlan">保存规划</el-button>
+        <el-button type="" style="float:right;margin-right:10px;" @click="refresh">刷新</el-button>
       </el-button-group>
 
     </el-row>
@@ -40,11 +42,14 @@ import store from '@/components/store/store.js'
 import DataDec from './DataDec'
 import DayTravelDetail from './DayTravelDetail'
 import RecommendOptions from './RecommendOptions'
+import axios from 'axios'
+axios.defaults.withCredentials = true
 export default {
   data() {
     return {
       msg: 'Hello, World!',
-      heatMapData: []
+      heatMapData: [],
+      loading: true
     }
   },
   computed: {
@@ -53,12 +58,91 @@ export default {
       return this.$store.state.testPlanRes
     }
   },
+  methods: {
+    // 发起路线规划请求
+    design() {
+      let start_city = this.$store.state.beginCity[1].substr(0, 2)
+      let type_id = this.$store.state.selectType.join(',')
+      let go_off = this.$store.state.schedule.join(',')
+      let arrvail = this.$store.state.schedule[0]
+      let play_time = this.$store.state.travelComfort
+
+      let name = this.$store.state.selectCityVal
+      let transDict = this.$store.state.transDict
+      let end_city = ''
+      transDict.forEach((item, index) => {
+        if (item.name == name) {
+          end_city = item.transName
+        }
+      })
+
+      // console.log(start_city)
+      // console.log(end_city)
+      // console.log(type_id)
+      // console.log(get_off)
+      // console.log(arrvail)
+      // console.log(play_time)
+
+      let that = this
+      axios({
+        method: 'post',
+        url: 'http://localhost:8089/gd/back_end/public/index.php/v1/design',
+        data: {
+          // type_id: type_id,
+          type_id: '1,2,5,6,7,8,9,10,11,12',
+          // go_off: go_off,
+          go_off: '2018-06-01,2018-06-03',
+          arrival: '2018-06-01 18:00',
+          play_time: play_time,
+          start_city: start_city,
+          end_city: end_city
+        },
+        withCredentials: true
+      }).then(function(response) {
+        that.$store.commit('storeTestPlanRes', response.data.data)
+        // alert('核心功能！！！！！')
+        that.loading = false
+        that.$message({
+          showClose: true,
+          center: true,
+          message: '路线规划成功！',
+          type: 'success'
+        })
+        console.log(response.data)
+      })
+    },
+    // 刷新
+    refresh() {
+      this.reload()
+    },
+    savePlan() {
+      let data = this.$store.state.testPlanRes
+      // alert(data.data['id'])
+
+      // console.log(data)
+      let that = this
+      axios({
+        method: 'post',
+        url: 'http://localhost:8089/gd/back_end/public/index.php/v1/plan',
+        data: data,
+        withCredentials: true
+      }).then(function(response) {
+        alert('ojbk22222!')
+      })
+    }
+  },
+  mounted() {
+    // 发起路线规划请求
+    this.design()
+  },
   created() {},
   components: {
     'data-dec': DataDec,
     'day-travel-detail': DayTravelDetail,
     'recommend-options': RecommendOptions
   },
+  inject: ['reload'],
+
   store
 }
 </script>

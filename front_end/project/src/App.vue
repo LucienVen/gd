@@ -7,7 +7,8 @@
       </el-header>
       <el-main>
         <!-- <img src="./assets/logo.png"> -->
-        <router-view/>
+        <!-- <router-view/> -->
+        <router-view v-if="isRouterAlive" />
       </el-main>
       <el-footer style="height:300px; width:100%;">
         <layout-footer></layout-footer>
@@ -22,7 +23,23 @@ import LayoutNav from './components/LayoutNav'
 import LayoutFooter from './components/LayoutFooter'
 export default {
   name: 'App',
-  components:{
+  data() {
+    return {
+      isRouterAlive: true
+    }
+  },
+  provide () {
+    return {
+      reload: this.reload
+    }
+  },
+  methods: {
+    reload() {
+      this.isRouterAlive = false
+      this.$nextTick(() => (this.isRouterAlive = true))
+    }
+  },
+  components: {
     'layout-nav': LayoutNav,
     'layout-footer': LayoutFooter
   }
@@ -38,7 +55,7 @@ export default {
   color: #2c3e50;
   /* margin-top: 60px; */
 }
-.el-header{
+.el-header {
   background-color: #162439;
   color: #333;
   text-align: center;
@@ -51,7 +68,7 @@ export default {
   color: #333;
   text-align: center;
   padding: 0;
-  
+
   /* line-height: 60px; */
 }
 
@@ -64,7 +81,5 @@ export default {
   color: #333;
   text-align: center;
   /* line-height: 160px; */
-  
-  
 }
 </style>

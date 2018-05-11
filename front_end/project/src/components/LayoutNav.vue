@@ -1,6 +1,6 @@
 <template>
   <div id="layoutNav">
-    <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect" background-color="#162439" text-color="#fff" active-text-color="#ffd04b">
+    <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" background-color="#162439" text-color="#fff" active-text-color="#ffd04b">
       <el-menu-item index="1" id="title">
         <i class="el-icon-edit"></i>
         <router-link to="/">TOUR PLAN</router-link>
@@ -52,11 +52,11 @@ export default {
         return (this.isLogin = true)
       }
     },
-    showID(){
+    showID() {
       let username = this.$store.state.username
-      if(username !== ''){
+      if (username !== '') {
         return username
-      }else{
+      } else {
         return this.$store.state.email
       }
     }
@@ -72,10 +72,12 @@ export default {
       .then(function(response) {
         // 更新store
         that.username = response.data.data.username
+        that.$store.commit('storeUid', response.data.data.uid)
+        console.log(that.$store.state.uid)
         that.$store.commit('storeEmail', response.data.data.email)
-        console.log(that.$store.state.email)
+
         that.$store.commit('storeUserName', response.data.data.username)
-        console.log(that.$store.state.username)
+        // console.log(that.$store.state.username)
       })
       .catch(function(error) {
         console.log(error)
@@ -84,42 +86,26 @@ export default {
   methods: {
     // 注销
     logOut() {
+      let that = this
       axios({
         method: 'delete',
         url: 'http://localhost:8089/gd/back_end/public/index.php/v1/auth',
         withCredentials: true
       }).then(function(response) {
-        // 更新store
-        alert('退出成功！')
+        // 更新store？
+        // alert('退出成功！')
+        that.$message({
+          showClose: true,
+          message: '注销成功',
+          type: 'success'
+        })
+        // 跳转之后会刷新store了
         window.location.href = 'http://localhost:8080'
       })
     },
     hello() {
       alert('Hello, world!!')
     }
-    // handleSelect(key, keyPath) {
-    //   console.log(key, keyPath)
-    // }
-    // getUserInfo() {
-    //   axios
-    //     .get('http://localhost:8089/gd/back_end/public/index.php/v1/user')
-    //     .then(function(response) {
-    //       // console.log(response)
-    //       // if(response.error == 0){
-    //       // console.log(this.msg)
-    //       // console.log(response)
-    //       this.username = response.data.data.username
-    //       console.log(this.username)
-
-    //       // }
-    //     })
-    //     .catch(function(error) {
-    //       console.log(error)
-    //     })
-    // }
-    // getStore(){
-    //   console.log($store.state.typeList)
-    // }
   },
   store
 

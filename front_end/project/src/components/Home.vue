@@ -16,7 +16,7 @@
             <!-- <bar-chart></bar-chart> -->
             <map-echarts></map-echarts>
         </el-row>
-        <el-row :gutter="20" justify="center">
+        <el-row :gutter="20" justify="center" style="margin: 50px">
             <router-link to="/plan">
                 <el-button>开始规划行程</el-button>
             </router-link>
@@ -43,15 +43,15 @@
             </div>
         </el-row>
         <!-- 卡片 -->
-        <el-row>
+        <el-row v-if="false">
             <!-- <el-col :span="6"></el-col> -->
-            <el-col :span="12" :offset="6" justify="center" style="margin-top:30px;">
+            <el-col :span="12" :offset="6" justify="center" style="margin-top:30px;" >
                 <h2 style="line-height:40px;">为你推荐</h2>
                 <p style="line-height:5px;">（根据用户注册时选择喜爱的景点类型推荐）</p>
             </el-col>
         </el-row>
         <!-- <h1>为你推荐</h1> -->
-        <el-row :gutter="20" id="recommend-card">
+        <el-row :gutter="20" id="recommend-card" v-if="false">
             <el-col :span="3">
                 <i class="el-icon-d-arrow-left"></i>
             </el-col>

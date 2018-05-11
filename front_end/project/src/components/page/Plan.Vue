@@ -45,20 +45,20 @@
             </div>
 
           </el-collapse-item>
-          <el-collapse-item title="选择意愿游玩景点类型（可不选）" name="2">
-            <p>推荐选项：</p>
-            <el-checkbox-group v-model="pointTypeList" size="small">
-              <!-- <span>推荐选项：</span> -->
-              <el-checkbox v-for="item in recPointType" :label="item.id" :key="item.id" border>{{item.type}}</el-checkbox>
-              <!-- <el-checkbox v-for="ite in commonPointType" :label="ite.id" :key="ite.id" border>{{ite.type}}</el-checkbox> -->
-            </el-checkbox-group>
+          <el-collapse-item title="选择意愿游玩景点类型" name="2">
+            <!-- <p>推荐选项：</p> -->
+            <!-- <el-checkbox-group v-model="pointTypeList" size="small"> -->
+            <!-- <span>推荐选项：</span> -->
+            <!-- <el-checkbox v-for="item in recPointType" :label="item.id" :key="item.id" border>{{item.type}}</el-checkbox> -->
+            <!-- <el-checkbox v-for="ite in commonPointType" :label="ite.id" :key="ite.id" border>{{ite.type}}</el-checkbox> -->
+            <!-- </el-checkbox-group> -->
             <p>景点类型：</p>
-            <el-checkbox-group v-model="pointTypeList" size="small">
-              <el-checkbox v-for="ite in pointType" :label="ite.id" :key="ite.id" border>{{ite.type}}</el-checkbox>
+            <el-checkbox-group v-model="pointTypeList" size="small" @change="$store.commit('storeSelectType',pointTypeList)">
+              <el-checkbox style='margin-top:10px;' v-for="ite in axiosPointType" :label="ite.type_id" :key="ite.type_id" border>{{ite.name}}</el-checkbox>
             </el-checkbox-group>
             <p></p>
             <div>
-              <el-button @click="nextStep();$store.commit('storeSelectType',pointTypeList)">下一步</el-button>
+              <el-button @click="nextStep();">下一步</el-button>
             </div>
           </el-collapse-item>
           <el-collapse-item title="游玩选项" name="3">
@@ -86,7 +86,7 @@
 
               <!-- TODO: 样式修改 -->
               <div v-if="ticketingInquiry" style="padding:20px">
-                <el-table :data="trainTicketList" style="width: 100%" highlight-current-row @current-change="handleCurrentChange" v-loading="loading">
+                <el-table  ref="train" :data="trainTicketList" style="width: 100%" highlight-current-row @current-change="handleCurrentChange" v-loading="loading">
                   <el-table-column type="expand">
                     <template slot-scope="props">
                       <el-form label-position="left" inline class="demo-table-expand">
@@ -151,14 +151,16 @@
             <hr/>
             <div style="padding-top:20px;">
               <router-link to="/plan/resultTravel">
-                <el-button type="" class="isSubmit" @click="getPlanRes">开始规划</el-button>
-
+                <el-button type="" class="isSubmit" @click="">开始规划</el-button>
               </router-link>
               <el-button type="" @click='dumpStep'>test</el-button>
 
             </div>
           </el-collapse-item>
         </el-collapse>
+        <el-button type="" @click='getALlMsg'>get</el-button>
+        {{msg}}
+
       </el-col>
       <el-col :span="8">
         <div style="background-color:#FFFFFF; padding:20px">
@@ -167,6 +169,7 @@
           <el-card class="box-card" style="line-height:20px;text-align:left; padding-top:10px; color:#636363">
             <div slot="header" class="clearfix">
               <span>选项：</span>
+              <el-button size="mini" style="float:right" @click="reflash">刷新</el-button>
               <el-button size="mini" style="float:right" @click="resetPageData();$store.commit('reset');">重置</el-button>
             </div>
             <div style="padding-top:12px">
@@ -242,6 +245,7 @@ import { pca } from '../../../static/js/pcaOption'
 export default {
   data() {
     return {
+      msg:'',
       // train ticket list
       trainTicketList: '',
       loading: true,
@@ -254,8 +258,8 @@ export default {
       beginCityName: '',
 
       // 选择行数
-      currentRow: null,
-      activeName: '3',
+      currentRow: '',
+      activeName: '4',
       cityData: [
         {
           value: 'xiamen',
@@ -279,6 +283,8 @@ export default {
       selectedCity: '',
 
       pointTypeList: [],
+      // 从axios获取的景点类型
+      axiosPointType: '',
 
       // 日程
       schedule: '',
@@ -341,9 +347,9 @@ export default {
     pointType() {
       return this.$store.state.typeList
     },
-    recPointType() {
-      return (this.recType = this.$store.getters.storeRecPointType)
-    },
+    // recPointType() {
+    //   return (this.recType = this.$store.getters.storeRecPointType)
+    // },
     commonPointType() {
       return (this.comType = this.$store.getters.storeCommonPointType)
     },
@@ -393,6 +399,40 @@ export default {
   },
 
   methods: {
+    // 刷新
+    reflash() {
+      this.reload()
+    },
+    // ------------------------------
+    // 获取将要post的数据
+    getALlMsg(){
+      
+    },
+    // 获取景点列表
+    getPointTypeList() {
+      let that = this
+      axios
+        .get(
+          'http://localhost:8089/gd/back_end/public/index.php/v1/destination/types?page=1&perpage=20&order=0'
+        )
+        .then(function(response) {
+          // console.log(response.data.data.data)
+          // let org_data = response.data.data.data
+          // let data = []
+          // let temp = []
+          // for(let i in org_data){
+          //   if(!temp.indexOf(org_data[i]['type_id'])){
+          //     temp.push(org_data[i]['type_id'])
+          //     data[data.length+1] = org_data[i]
+              // data.push(org_data[i])
+            // }
+            // console.log(org_data[i]['type_id'])
+          // }
+          // console.log(data)
+          that.axiosPointType = response.data.data.data
+          // alert('point type')
+        })
+    },
     // 请求列车信息
     trainMsg(start, end, time) {
       var that = this
@@ -407,21 +447,23 @@ export default {
         // data: params,
         withCredentials: true
       }).then(function(response) {
-        console.log(response.data.data);
+        console.log(response.data.data)
         // 更新store
         that.trainTicketList = response.data.data
+        that.notice('票务查询成功！', '3', 'success')
         that.loading = false
-        alert('ojbk')
+        // alert('ojbk')
+
         // window.location.href = 'http://localhost:8080/#/login'
       })
     },
     // notice
-    notice(msg, act) {
+    notice(msg, act, type = 'warning') {
       this.$message({
         showClose: true,
         center: true,
         message: msg,
-        type: 'warning'
+        type: type
       })
       this.activeName = act
     },
@@ -452,6 +494,12 @@ export default {
         }
         // alert(this.storeSelectCity)
         // alert(this.storeSelectTravelMode)
+      } else if (
+        this.storeSelectTravelMode != '' &&
+        this.storeSelectTravelMode != '3'
+      ) {
+        this.notice('除铁路票务外其他票务查询尚未开通', '3')
+        this.ticketingInquiry = false
       } else {
         this.notice('出行方式未选择', '3')
         // alert('trouble!')
@@ -471,6 +519,7 @@ export default {
         // that.$store.
         that.$store.commit('storeTestPlanRes', response.data.data)
         alert('ojbk！')
+
         // window.location.href='http://localhost:8080'
       })
     },
@@ -494,31 +543,33 @@ export default {
     },
 
     resetPageData() {
+      this.reflash()
       //   return (
-      this.activeName = '3'
-      this.loading = true
-      // 城市
-      // this.selectCityVal = ''
-      // this.beginCityCode = ''
-      // this.beginCityName = ''
-      // 景点
-      this.pointTypeList = []
-      // 日程
-      this.schedule = ''
-      // 出行方式
-      this.travelMode = ''
-      // 票务查询
-      this.ticketingInquiry = false
-      // 宽松度
-      this.travelComfort = ''
-      // 奢华度
-      this.hotelType = ''
+      // this.activeName = '3'
+      // this.loading = true
+      // // 城市
+      // // this.selectCityVal = ''
+      // // this.beginCityCode = ''
+      // // this.beginCityName = ''
+      // // 景点
+      // this.pointTypeList = []
+      // // 日程
+      // this.schedule = ''
+      // // 出行方式
+      // this.travelMode = ''
+      // // 票务查询
+      // this.ticketingInquiry = false
+      // // 宽松度
+      // this.travelComfort = ''
+      // // 奢华度
+      // this.hotelType = ''
     },
     hello() {
       alert('hello, world!')
     },
     ClickCity(city) {
       this.selectedCity = city
+      // $store.commit('storeSelectedCity', this.selectedCity);
       //   alert('Hello,' + city + ' !')
     },
     //   test
@@ -528,13 +579,18 @@ export default {
     //   选择列车行信息
     //   拼接成另一个json结构？
     handleCurrentChange(val) {
-      return (this.currentRow = val)
+      console.log(val)
+      // storeTrainSchedule
+      this.$store.commit('storeTrainSchedule', val)
+      
+      this.currentRow = val
+      this.notice('ojbk', '3', 'success')
       //   return $store.commit('storeTrainSchedule', val)
     },
     // 取消列车行选择
     setCurrent(row) {
-      //   this.$refs.singleTable.setCurrentRow(row);
-      return (this.currentRow = null)
+        this.$refs.train.setCurrentRow(row);
+      // return (this.currentRow = '')
     },
     nextStep() {
       this.activeName = String(parseInt(this.activeName) + 1)
@@ -607,6 +663,10 @@ export default {
     //   alert('出行方式为：' + mode)
     // }
   },
+  mounted() {
+    this.getPointTypeList()
+  },
+  inject: ['reload'],
   store
 }
 </script>

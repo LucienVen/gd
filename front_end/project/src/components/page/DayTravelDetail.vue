@@ -10,8 +10,8 @@
         <!-- <div>地点</div> -->
 
         <div>
-          厦 门
-          <!-- {{storeMoveCity}} -->
+          <!-- 厦 门 -->
+          {{storeMoveCity}}
           <!-- {{tempPlanData}} -->
           <!-- <el-button size="mini" type="" @click="getViewpointList">test</el-button> -->
         </div>
@@ -36,15 +36,10 @@
 
     <!-- <view-point-dia></view-point-dia> -->
 
+    <!-- 模态框 -->
     <el-dialog :title="storeDiaTitle" :visible.sync="dialogVisible" width="50%" style="text-align:left;">
-      <!-- <span>{{storeDiaTitle}}</span> -->
-      <!-- <div>{{scenicData}}</div> -->
       <hr style="margin-top:-20px;">
       <div v-model="viewPointData">
-        <!-- <div > -->
-
-        <!-- <p>{{item.name}}</p> -->
-        <!-- <p>{{item.detail}}</p> -->
         <el-row :gutter="30" class="diaRow">
           <el-col :span="14">
             <div class="diaBackground">
@@ -69,9 +64,9 @@
             </div>
             <div style="margin-top:10px">
               印象标签：
-              <!-- <div>
-                <el-tag v-for="m in viewPointData.impression.split(' ')" type="info" style="margin:2px;">{{m}}</el-tag>
-              </div> -->
+              <div>
+                <el-tag v-for="m in viewPointData.impression" type="info" style="margin:2px;"><b>{{m}}</b></el-tag>
+              </div>
 
               <!-- <span>{{viewPointData.impression}}</span> -->
             </div>
@@ -85,6 +80,18 @@
               </div>
               <div>
                 {{viewPointData.description}}
+              </div>
+            </el-card>
+          </el-col>
+        </el-row>
+        <el-row class="diaRow" v-if="viewPointData.tip != None">
+          <el-col :span="24" class="detailFloat">
+            <el-card>
+              <div slot="header" class="clearfix">
+                <span>tip: </span>
+              </div>
+              <div>
+                {{viewPointData.tip}}
               </div>
             </el-card>
           </el-col>
@@ -170,6 +177,10 @@ export default {
   mounted() {
     this.storeShowDay()
     this.storeBeginShowDayDetail()
+    // setTimeout(
+    //   this.reload(),1000
+    // )
+    
   },
   computed: {
     
@@ -317,6 +328,7 @@ export default {
   // components: {
   //   'view-point-dia': ViewPointDialog
   // },
+  inject: ['reload'],
   store
 }
 </script>
