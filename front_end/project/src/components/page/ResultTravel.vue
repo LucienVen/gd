@@ -1,5 +1,5 @@
 <template>
-  <div id="resultTravel" v-loading="loading" element-loading-text="拼命加载中">
+  <div id="resultTravel" :v-loading="{storePlanLoading}" element-loading-text="拼命加载中">
 
     <!-- <h1>{{msg}}</h1> -->
     <el-row :gutter="20" id="resTitle" class="resTitle">
@@ -56,6 +56,9 @@ export default {
     storeTestPlanRes() {
       // this.$store.state.selectType
       return this.$store.state.testPlanRes
+    },
+    storePlanLoading(){
+      return this.$store.state.planLoading
     }
   },
   methods: {
@@ -88,12 +91,13 @@ export default {
         method: 'post',
         url: 'http://localhost:8089/gd/back_end/public/index.php/v1/design',
         data: {
-          // type_id: type_id,
-          type_id: '1,2,5,6,7,8,9,10,11,12',
-          // go_off: go_off,
-          go_off: '2018-06-01,2018-06-03',
-          arrival: '2018-06-01 18:00',
-          play_time: play_time,
+          type_id: type_id,
+          // type_id: '1,2,5,6,7,8,9,10,11,12',
+          go_off: go_off,
+          // go_off: '2018-06-01,2018-06-03',
+          // arrival: '2018-06-01 18:00',
+          arrival: go_off[0],
+          play_time: 0,
           start_city: start_city,
           end_city: end_city
         },
@@ -133,7 +137,7 @@ export default {
   },
   mounted() {
     // 发起路线规划请求
-    this.design()
+    // this.design()
   },
   created() {},
   components: {

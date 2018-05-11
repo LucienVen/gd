@@ -16,8 +16,8 @@
           <!-- <el-button size="mini" type="" @click="getViewpointList">test</el-button> -->
         </div>
         <div style="width:50%; font-size:10px; color:#9f9f9f;">
-          规划行程时间: 适中
-          <el-progress :percentage="50" color="#7DC28F"></el-progress>
+          <!-- 规划行程时间: 适中 -->
+          <el-progress :percentage="20" color="#7DC28F"></el-progress>
         </div>
       </div>
       <div v-for="(i, index) in storeShowDayDetail['detail']" class="dayItem">

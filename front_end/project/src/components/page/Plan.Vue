@@ -151,7 +151,7 @@
             <hr/>
             <div style="padding-top:20px;">
               <router-link to="/plan/resultTravel">
-                <el-button type="" class="isSubmit" @click="">开始规划</el-button>
+                <el-button type="" class="isSubmit" @click="design">开始规划</el-button>
               </router-link>
               <el-button type="" @click='dumpStep'>test</el-button>
 
@@ -399,6 +399,67 @@ export default {
   },
 
   methods: {
+    // 开始规划路线
+    design() {
+      let start_city = this.$store.state.beginCity[1].substr(0, 2)
+      let type_id = this.$store.state.selectType.join(',')
+      let go_off = this.$store.state.schedule.join(',')
+      let arrvail = this.$store.state.schedule[0]
+      let play_time = this.$store.state.travelComfort
+      if(play_time == '1' || play_time == '2' ){
+        play_time = 0
+      }else{
+        play_time = 1
+      }
+
+      let name = this.$store.state.selectCityVal
+      let transDict = this.$store.state.transDict
+      let end_city = ''
+      transDict.forEach((item, index) => {
+        if (item.name == name) {
+          end_city = item.transName
+        }
+      })
+
+      // console.log(start_city)
+      // console.log(end_city)
+      // console.log(type_id)
+      // console.log(get_off)
+      // console.log(arrvail)
+      // console.log(play_time)
+
+      let that = this
+      axios({
+        method: 'post',
+        url: 'http://localhost:8089/gd/back_end/public/index.php/v1/design',
+        data: {
+          type_id: type_id,
+          // type_id: '1,2,5,6,7,8,9,10,11,12',
+          go_off: go_off,
+          // go_off: '2018-06-01,2018-06-03',
+          // arrival: '2018-06-01 18:00',
+          arrival: go_off[0],
+          play_time: 0,
+          start_city: start_city,
+          end_city: end_city
+        },
+        withCredentials: true
+      }).then(function(response) {
+        console.log(response.data.data)
+        that.$store.commit('storeTestPlanRes', response.data.data)
+        // alert('核心功能！！！！！')
+        // that.loading = false
+
+        that.$store.commit('storePlanLoading', false)
+        that.$message({
+          showClose: true,
+          center: true,
+          message: '路线规划成功！',
+          type: 'success'
+        })
+        console.log(response.data)
+      })
+    },
     // 刷新
     reflash() {
       this.reload()

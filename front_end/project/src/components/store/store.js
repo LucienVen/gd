@@ -106,10 +106,17 @@ const state = {
   diaTitle: "",
   // 地图刷新, 记录地图当前显示值
   mapReflash: '',
+  // plan res loading
+  planLoading: true
 }
 
 // 设置同步方法
 const mutations = {
+  storePlanLoading(state, planLoading){
+    state.planLoading = planLoading
+  },
+
+
 
   // 用户信息
   storeUid(state, uid){
@@ -212,7 +219,7 @@ const mutations = {
     // state.showDayCity = showDayCity
   },
   
-  
+  // 用来展示的时间
   storeShowDayTime(state, showDayTime) {
     state.showDayTime = showDayTime
   },

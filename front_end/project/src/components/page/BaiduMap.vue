@@ -27,10 +27,10 @@
 
       </el-col>
       <el-col :span="14">
-        {{old_showDay}}
-        <p>{{storeShowDay}}</p>
+        <!-- {{old_showDay}} -->
+        <!-- <p>{{storeShowDay}}</p> -->
         <div>
-          {{storeShowDayDetail}}
+          <!-- {{storeShowDayDetail}} -->
         </div>
         <el-button style="float:left;" type="" @click="refresh">刷新</el-button>
         <div id="showMap">
@@ -59,9 +59,12 @@ export default {
   },
   computed: {
     // 获取store showDay
-    storeShowDay() {
-      return this.$store.state.showDay
-    },
+    // storeShowDay() {
+    //   if(this.old_showDay !== this.$store.state.showDay){
+    //     $store.commit('storeShowDay', this.$store.state.showDay);
+    //     this.reload()
+    //   }
+    // },
     // isReflash(){
     //   let new_showDay = 
     // },
