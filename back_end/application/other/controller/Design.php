@@ -216,8 +216,9 @@ class Design extends Base
         }
 
         $this->adjPoint($pointData);
+        // var_dump($pointData);
         // foreach ($pointData as $key => $value) {
-        //     echo $key;var_dump($value->toArray());
+            // echo $key;var_dump($value->toArray());
         // }
 
         return $pointData;
@@ -240,6 +241,7 @@ class Design extends Base
             $pre = floor($this->calcTime($point)/$this->total);
         }
         while ($pre < $this->timeTypeMin[$this->playTimeSel]) {
+            if (empty($optionData)) break;
             $selP = array_shift($optionData);
             if ($selP['cost_time'] == 0) {
                 $selP['cost_time'] = $this->fakeTime[array_rand($this->fakeTime)];
