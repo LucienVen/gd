@@ -117,6 +117,13 @@ class Design extends Base
     private $desTypeModel;
 
     /**
+     * 填充时间选择
+     *
+     * @var array
+     */
+    private $fakeTime = [0.50, 1.00, 1.50, 2.00];
+
+    /**
      * 规划接口入口
      *
      * @param Request $request
@@ -132,6 +139,13 @@ class Design extends Base
         }
 
         $this->mapping = array_keys($this->position);
+
+        $this->GALoop();
+        return $this->sendSuccess($this->dateReturn($this->ga->getBest()));
+    }
+
+    private function GALoop()
+    {
         $this->ga = new GA(array_values($this->position));
         for ($i=0; $i < $this->ga::MAXAGE; $i++) {
             $this->ga->popDistance();
@@ -142,7 +156,6 @@ class Design extends Base
             $this->ga->reverse();
             $this->ga->reins();
         }
-        return $this->sendSuccess($this->dateReturn($this->ga->getBest()));
     }
 
     private function dataProcessing($data)
@@ -195,29 +208,44 @@ class Design extends Base
                 $orCon = [];
             }
             $pointData = array_merge($pointData,
-                $this->desModel->where('ds.id', $value)->whereOr($orCon)->alias('ds')
-                ->join('destination_detail dd', 'dd.des_id=ds.id')
-                ->order('dd.score desc')
-                ->field('ds.id,dd.position,dd.cost_time,dd.cost_max_time')->select()
+                $this->desModel->where('ds.id', $value)
+                    ->where('dd.position', 'neq', 'null')->whereOr($orCon)->alias('ds')
+                    ->join('destination_detail dd', 'dd.des_id=ds.id')->order('dd.score desc')
+                    ->field('ds.id,dd.position,dd.cost_time,dd.cost_max_time')->select()
             );
+        }
+
+        $this->adjPoint($pointData);
+        foreach ($pointData as $key => $value) {
+            echo $key;var_dump($value->toArray());
         }
 
         return $pointData;
     }
 
-    private function addPoint(&$point)
+    private function adjPoint(&$point)
     {
-        $optionData = $this->desModel->join('destination_detail dd', 'dd.des_id=ds.id')
-            ->order('dd.score desc')
-            ->field('ds.id,dd.position,dd.cost_time,dd.cost_max_time')
-            ->limit(10)->select();
-        while (count($point) < $total) {
+        $optionData = $this->desModel->alias('ds')->where('dd.position', 'neq', 'null')
+            ->where('dd.rank', 'neq', 0)
+            ->join('destination_detail dd', 'dd.id=ds.id')->order('dd.rank asc,dd.score desc')
+            ->field('ds.id,dd.position,dd.cost_time,dd.cost_max_time')->limit(10)->select();
+
+        while (count($point) < $this->total) {
             array_push($point, array_shift($optionData));
         }
-        $pre = $this->calcTime($point)/$total;
-        if ($pre > $this->timeType[$this->playTimeSel]) {
-        } elseif ($pre == $total) {
-        } elseif ($pre < $this->timeTypeMin[$this->playTimeSel]) {
+        $pre = floor($this->calcTime($point)/$this->total);
+        while ($pre > $this->timeType[$this->playTimeSel]) {
+            if (count($point) == $this->total) break;
+            array_pop($point);
+            $pre = floor($this->calcTime($point)/$this->total);
+        }
+        while ($pre < $this->timeTypeMin[$this->playTimeSel]) {
+            $selP = array_shift($optionData);
+            if ($selP['cost_time'] == 0) {
+                $selP['cost_time'] = $this->fakeTime[array_rand($this->fakeTime)];
+            }
+            array_push($point, $selP);
+            $pre = floor($this->calcTime($point)/$this->total);
         }
     }
 
@@ -226,12 +254,14 @@ class Design extends Base
         $totalTime = 0;
         foreach ($point as $key => $value) {
             if ($value['cost_time'] >= 24) {
-                $value['cost_time'] = 0;
+                $t = 0;
+            } else {
+                $t = $value['cost_time'];
             }
             if ($this->playTimeSel) {
-                $totalTime += $value['cost_time'];
+                $totalTime += $t;
             } else {
-                $totalTime += $value['cost_max_time']==0?$value['cost_time']:$value['cost_max_time'];
+                $totalTime += $value['cost_max_time']==0?$t:$value['cost_max_time'];
             }
         }
 
