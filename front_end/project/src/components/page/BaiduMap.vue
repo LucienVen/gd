@@ -32,7 +32,9 @@
         <div>
           <!-- {{storeShowDayDetail}} -->
         </div>
-        <el-button style="float:left;" type="" @click="refresh">刷新</el-button>
+          <el-button style="float:right;" type="warning" icon="el-icon-star-off"  @click="refresh" circle></el-button>
+
+        <!-- <el-button style="float:left;" type="" @click="refresh">刷新</el-button> -->
         <div id="showMap">
 
         </div>

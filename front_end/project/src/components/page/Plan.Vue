@@ -86,7 +86,7 @@
 
               <!-- TODO: 样式修改 -->
               <div v-if="ticketingInquiry" style="padding:20px">
-                <el-table  ref="train" :data="trainTicketList" style="width: 100%" highlight-current-row @current-change="handleCurrentChange" v-loading="loading">
+                <el-table ref="train" :data="trainTicketList" style="width: 100%" highlight-current-row @current-change="handleCurrentChange" v-loading="loading">
                   <el-table-column type="expand">
                     <template slot-scope="props">
                       <el-form label-position="left" inline class="demo-table-expand">
@@ -153,13 +153,13 @@
               <router-link to="/plan/resultTravel">
                 <el-button type="" class="isSubmit" @click="design">开始规划</el-button>
               </router-link>
-              <el-button type="" @click='dumpStep'>test</el-button>
+              <!-- <el-button type="" @click='dumpStep'>test</el-button> -->
 
             </div>
           </el-collapse-item>
         </el-collapse>
-        <el-button type="" @click='getALlMsg'>get</el-button>
-        {{msg}}
+        <!-- <el-button type="" @click='getALlMsg'>get</el-button> -->
+        <!-- {{msg}} -->
 
       </el-col>
       <el-col :span="8">
@@ -224,10 +224,10 @@
               <hr/>
             </div>
           </el-card>
-          <p>{{pointTypeList}}</p>
-          <p>{{selectedCity}}</p>
-          <el-button :plain="true" @click="dumpStep">打开消息提示</el-button>
-          <el-button @click="notice('城市未选择')">notice</el-button>
+          <!-- <p>{{pointTypeList}}</p>
+          <p>{{selectedCity}}</p> -->
+          <!-- <el-button :plain="true" @click="dumpStep">打开消息提示</el-button> -->
+          <!-- <el-button @click="notice('城市未选择')">notice</el-button> -->
           <!-- <img src='../../assets/city/xiamen.jpeg'> -->
         </div>
       </el-col>
@@ -245,7 +245,7 @@ import { pca } from '../../../static/js/pcaOption'
 export default {
   data() {
     return {
-      msg:'',
+      msg: '',
       // train ticket list
       trainTicketList: '',
       loading: true,
@@ -406,12 +406,12 @@ export default {
       let go_off = this.$store.state.schedule.join(',')
       let arrvail = this.$store.state.schedule[0]
       let play_time = this.$store.state.travelComfort
-      if(play_time == '1' || play_time == '2' ){
+      if (play_time == '1' || play_time == '2') {
         play_time = 0
-      }else{
+      } else {
         play_time = 1
       }
-
+      // alert(play_time)
       let name = this.$store.state.selectCityVal
       let transDict = this.$store.state.transDict
       let end_city = ''
@@ -439,7 +439,7 @@ export default {
           // go_off: '2018-06-01,2018-06-03',
           // arrival: '2018-06-01 18:00',
           arrival: go_off[0],
-          play_time: 0,
+          play_time: play_time,
           start_city: start_city,
           end_city: end_city
         },
@@ -449,14 +449,17 @@ export default {
         that.$store.commit('storeTestPlanRes', response.data.data)
         // alert('核心功能！！！！！')
         // that.loading = false
+        if ($that.$store.state.testPlanRes !== '') {
+          that.$message({
+            showClose: true,
+            center: true,
+            message: '路线规划成功！',
+            type: 'success'
+          })
+          that.$store.commit('storePlanLoading', false)
+        }
 
-        that.$store.commit('storePlanLoading', false)
-        that.$message({
-          showClose: true,
-          center: true,
-          message: '路线规划成功！',
-          type: 'success'
-        })
+        // that.$store.commit('storePlanLoading', false)
         console.log(response.data)
       })
     },
@@ -466,9 +469,7 @@ export default {
     },
     // ------------------------------
     // 获取将要post的数据
-    getALlMsg(){
-      
-    },
+    getALlMsg() {},
     // 获取景点列表
     getPointTypeList() {
       let that = this
@@ -485,9 +486,9 @@ export default {
           //   if(!temp.indexOf(org_data[i]['type_id'])){
           //     temp.push(org_data[i]['type_id'])
           //     data[data.length+1] = org_data[i]
-              // data.push(org_data[i])
-            // }
-            // console.log(org_data[i]['type_id'])
+          // data.push(org_data[i])
+          // }
+          // console.log(org_data[i]['type_id'])
           // }
           // console.log(data)
           that.axiosPointType = response.data.data.data
@@ -643,14 +644,14 @@ export default {
       console.log(val)
       // storeTrainSchedule
       this.$store.commit('storeTrainSchedule', val)
-      
+
       this.currentRow = val
       this.notice('ojbk', '3', 'success')
       //   return $store.commit('storeTrainSchedule', val)
     },
     // 取消列车行选择
     setCurrent(row) {
-        this.$refs.train.setCurrentRow(row);
+      this.$refs.train.setCurrentRow(row)
       // return (this.currentRow = '')
     },
     nextStep() {

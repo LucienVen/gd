@@ -1,6 +1,6 @@
 <template>
-  <div id="resultTravel" :v-loading="{storePlanLoading}" element-loading-text="拼命加载中">
-
+  <div id="resultTravel" v-loading="" element-loading-text="拼命加载中">
+    
     <!-- <h1>{{msg}}</h1> -->
     <el-row :gutter="20" id="resTitle" class="resTitle">
       规划结果页
@@ -49,16 +49,24 @@ export default {
     return {
       msg: 'Hello, World!',
       heatMapData: [],
-      loading: true
+      loading: true,
+      test: ''
+
     }
   },
   computed: {
     storeTestPlanRes() {
       // this.$store.state.selectType
-      return this.$store.state.testPlanRes
+      this.test = this.$store.state.testPlanRes
     },
     storePlanLoading(){
+      // alert(this.$store.state.planLoading)
       return this.$store.state.planLoading
+    }
+  },
+  watch:{
+    test: function(newloading, oldloading){
+      this.loading = false
     }
   },
   methods: {
@@ -105,14 +113,15 @@ export default {
       }).then(function(response) {
         that.$store.commit('storeTestPlanRes', response.data.data)
         // alert('核心功能！！！！！')
-        that.loading = false
+        // that.loading = false
         that.$message({
           showClose: true,
           center: true,
           message: '路线规划成功！',
           type: 'success'
         })
-        console.log(response.data)
+        
+        // console.log(response.data)
       })
     },
     // 刷新
@@ -136,6 +145,7 @@ export default {
     }
   },
   mounted() {
+    this.loading = true
     // 发起路线规划请求
     // this.design()
   },
