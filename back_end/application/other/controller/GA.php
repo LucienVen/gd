@@ -18,11 +18,11 @@ class GA
     /**
      * 迭代次数
      */
-    const MAXAGE = 50;
+    const MAXAGE = 80;
     /**
      * 种群大小
      */
-    const POP_SIZE = 30;
+    const POP_SIZE = 50;
     /**
      * 交叉算子
      */

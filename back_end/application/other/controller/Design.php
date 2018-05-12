@@ -270,9 +270,6 @@ class Design extends Base
         return $totalTime;
     }
 
-    private function timePlan()
-    {
-    }
 
     private function dateReturn($data)
     {
@@ -281,22 +278,12 @@ class Design extends Base
             'cost_time' => $this->total
         ];
 
-        $idx = floor(count($data['realpath'])/$res['cost_time']);
-        $rd = [];
-        for ($i=0; $i < $res['cost_time']; $i++) {
-            if ($i==$res['cost_time']-1) {
-                $rd[$i] = (int)count($data['realpath'])-array_sum($rd);
-            } else {
-                $tmp = [round($idx+rand(0,1)), round($idx-rand(0,1))];
-                $rd[$i] = (int)$tmp[array_rand($tmp)];
-            }
-        }
-        shuffle($rd);
-        $p = 0;
+        $offset = 0;
         $day = [];
         for ($i=0; $i < $res['cost_time']; $i++) {
             $day[$i] = [
                 'day_distance' => 0,
+                'total_time' => 0,
                 'detail' => []
             ];
             if ($i == 0) {
@@ -306,22 +293,53 @@ class Design extends Base
             } else {
                 $day[$i]['move_city'] = $this->endCity;
             }
-            $detail = array_slice($data['path'], $p, $rd[$i]);
+            list($detail, $offset) = $this->sliceDay($data['path'], $offset);
             foreach ($detail as $k => $v) {
                 $detail[$k]['start_des'] = $this->mapping[$v['start_des']];
                 $detail[$k]['end_des'] = $this->mapping[$v['end_des']];
                 $detail[$k]['start_name'] = $this->desModel->where(['id'=>$detail[$k]['start_des']])->value('name');
                 $detail[$k]['end_name'] = $this->desModel->where(['id'=>$detail[$k]['end_des']])->value('name');
+
+                $ct = $this->point[$detail[$k]['start_des']]['cost_time'];
+                $cmt = $this->point[$detail[$k]['start_des']]['cost_max_time'];
+                if ($this->playTimeSel) {
+                    $day[$i]['total_time'] += $ct;
+                } else {
+                    $day[$i]['total_time'] += $cmt==0?$ct:$cmt;
+                }
+                $day[$i]['day_distance'] += $v['distance'];
             }
+            $day[$i]['node'] = count($detail);
             $day[$i]['detail'] = $detail;
-            $day[$i]['node'] = $rd[$i];
-            $p += $rd[$i];
-            foreach ($day[$i]['detail'] as $key => $value) {
-                $day[$i]['day_distance'] += $value['distance'];
-            }
         }
         $res['day'] = $day;
 
+        return $res;
+    }
+
+    private function sliceDay($data, $offset)
+    {
+        $cost = 0;
+        $i = 0;
+        $res = [];
+        foreach ($data as $key => $value) {
+            if ($i++ < $offset) {
+                continue;
+            }
+            $ct = $this->point[$this->mapping[$value['start_des']]]['cost_time'];
+            $cmt = $this->point[$this->mapping[$value['start_des']]]['cost_max_time'];
+            if ($cost <= $this->timeType[$this->playTimeSel]) {
+                $res[0][] = $value;
+            } else {
+                break;
+            }
+            if ($this->playTimeSel) {
+                $cost += $ct==12||$ct==24?6:$ct;
+            } else {
+                $cost += $cmt==0?$ct:$cmt;
+            }
+        }
+        $res[1] = $i-1;
         return $res;
     }
 }
